@@ -119,54 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &439529670
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 439529672}
-  - component: {fileID: 439529673}
-  m_Layer: 0
-  m_Name: Procedual Generation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &439529672
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439529670}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.08, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &439529673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439529670}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6625c53a54562ad489d3995458b00d52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileSize: 1000
-  generationRadius: 1
-  tilePrefab: {fileID: 4208767201980310800, guid: 941c0472fc285304baced5c86136288c, type: 3}
-  player: {fileID: 1263215866}
 --- !u!4 &1263215866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6792136107597336930, guid: c00ef642da9800143bdd0da694af4c1d, type: 3}
@@ -240,6 +192,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7486624920080245237, guid: c00ef642da9800143bdd0da694af4c1d, type: 3}
+      propertyPath: m_Constraints
+      value: 116
+      objectReference: {fileID: 0}
     - target: {fileID: 8183332930298683512, guid: c00ef642da9800143bdd0da694af4c1d, type: 3}
       propertyPath: isGrounded
       value: 1
@@ -307,7 +263,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2106398999}
-  - component: {fileID: 2106398998}
+  - component: {fileID: 2106399000}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -315,29 +271,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2106398998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2106398997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a76795626ae63147973a157d3e18e7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Config: {fileID: 11400000, guid: a3b818e01e3989c4797cd230f132c1da, type: 2}
-  TargetTerrain: {fileID: 8869231844534242376, guid: 37421961e9fca7c46abc434573df45cc, type: 3}
-  UseRandomSeed: 1
-  Seed: 0
-  PlayerTransform: {fileID: 1263215866}
-  TileRadius: 1
-  NoiseFrequency: 0.01
-  NoiseAmplitude: 0.41
-  NoiseOctaves: 4
-  TileUpdateInterval: 1
-  delay: 5
 --- !u!4 &2106398999
 Transform:
   m_ObjectHideFlags: 0
@@ -353,6 +286,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2106399000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106398997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9efe8546e8ffcb3449d89d8dbc4b0d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1263215866}
+  heightmapResolution: 513
+  terrainSize: 512
+  terrainHeight: 100
+  renderRadius: 1
+  terrainMaterial: {fileID: 2100000, guid: af57ccc091f9f97409c1091f389c53dd, type: 2}
+  noiseScale: 0.01
+  noiseAmplitude: 1
+  worldSeed: 1337
+  blendWidth: 0
 --- !u!1 &2138796727
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,7 +552,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 439529672}
   - {fileID: 1504898313}
   - {fileID: 2138796730}
   - {fileID: 1439137186}
