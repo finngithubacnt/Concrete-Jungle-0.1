@@ -9,14 +9,14 @@ public class CityGenerator : MonoBehaviour
 
     [Header("Prefabs")]
     public GameObject tilePrefab;
-    public GameObject roadStraightPrefab;
-    public GameObject roadCornerPrefab;
-    public GameObject roadTJunctionPrefab;
-    public GameObject roadIntersectionPrefab;
-    public GameObject roadStraightConnectorPrefab;
+   // public GameObject roadStraightPrefab;
+    //public GameObject roadCornerPrefab;
+    //public GameObject roadTJunctionPrefab;
+    //public GameObject roadIntersectionPrefab;
+   // public GameObject roadStraightConnectorPrefab;
 
     [Header("Buildings")]
-    public GameObject buildingCornerPrefab;
+   // public GameObject buildingCornerPrefab;
 
     [Header("Player Reference")]
     public Transform player;
@@ -151,16 +151,22 @@ public class CityGenerator : MonoBehaviour
                         rotation = Quaternion.Euler(0, -90, 0);
                         offset = new Vector3(-tileSize / 4f, 0, tileSize / 4f);
                     }
+                }
+            }
+        }
+    }
 
-                    if (Random.value > 0.5f)
+                   /* if (Random.value > 0.5f)
                     {
                         Vector3 buildingPos = worldPos + offset;
                         Instantiate(buildingCornerPrefab, buildingPos, rotation, transform);
                     }
                 }
             }
+        }
+    }
 
-            // Straight roads
+             Straight roads
             if (tile.up)
             {
                 Vector3 upPos = worldPos + new Vector3(0, 0, tileSize / 2f);
@@ -211,7 +217,7 @@ public class CityGenerator : MonoBehaviour
             }
         }
     }
-
+            */
     public class RoadTile
     {
         public bool up, down, left, right;

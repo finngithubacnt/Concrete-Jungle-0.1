@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class RoadBuildingSpawner : MonoBehaviour
+public class BuildingGen : MonoBehaviour
 {
     [Header("Building Floor Settings")]
     public List<GameObject> floorPrefabs;      // Middle floors
