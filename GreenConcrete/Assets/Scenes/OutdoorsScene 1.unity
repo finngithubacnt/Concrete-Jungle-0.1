@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 216667307}
-  - component: {fileID: 216667306}
+  - component: {fileID: 216667308}
   m_Layer: 0
   m_Name: biomeManager
   m_TagString: Untagged
@@ -136,32 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &216667306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 216667305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3709a449e1f76439f6dfd56a509c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileSize: 200
-  worldExtentInTiles: 300
-  centerCount: 7946
-  worldSeed: 100
-  borderNoiseScale: 0.08
-  borderNoiseAmplitudeInTiles: 3
-  neighborLookups: 3
-  biomeDefinitions:
-  - {fileID: 11400000, guid: d41603a303ab83942a5d4783b088e804, type: 2}
-  - {fileID: 11400000, guid: ab8e61eb7468a9f42b93f1e339cedac9, type: 2}
-  - {fileID: 11400000, guid: 6a00b5ee79e35e24995799b2cb0e770d, type: 2}
-  - {fileID: 11400000, guid: 04d90da4579ef9945ab1b781e15a7cb9, type: 2}
-  - {fileID: 11400000, guid: 738ec2389e9af2545846b9719442d1db, type: 2}
-  - {fileID: 11400000, guid: ac67941d646a48540bddeff1b24b78b4, type: 2}
 --- !u!4 &216667307
 Transform:
   m_ObjectHideFlags: 0
@@ -177,6 +151,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216667308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216667305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ded02e1df4d01354392b31da80e9ab26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 200
+  worldExtentInTiles: 62
+  centerCount: 207
+  worldSeed: 1337
+  borderNoiseScale: 0.08
+  borderNoiseAmplitudeInTiles: 3.01
+  neighborLookups: 14
+  biomeDefinitions:
+  - {fileID: 11400000, guid: 8f36e11351161654eb46d46f2d0fef11, type: 2}
+  - {fileID: 11400000, guid: 27087637e9bd2cf4bb57e82cc94c7e97, type: 2}
+  - {fileID: 11400000, guid: 3ad3c5b283ba35d4dad61b2c40345066, type: 2}
 --- !u!1 &461518144
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1820395368}
-  - component: {fileID: 1820395367}
+  - component: {fileID: 1820395369}
   m_Layer: 0
   m_Name: gen
   m_TagString: Untagged
@@ -397,29 +394,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1820395367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820395366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b8a53641b178dc4abd909230a01cf79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 4374923586338849842}
-  heightmapResolution: 513
-  terrainSize: 200
-  terrainHeight: 100
-  renderRadius: 1
-  terrainMaterial: {fileID: 2100000, guid: 0cb6566af3171cf45940a8d429c6e2c4, type: 2}
-  noiseScale: 0.005
-  noiseAmplitude: 0.5
-  worldSeed: 100
-  blendWidth: 0
-  biomeManager: {fileID: 216667306}
 --- !u!4 &1820395368
 Transform:
   m_ObjectHideFlags: 0
@@ -435,6 +409,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1820395369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820395366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aab75b8eb915174f85696ed2ffd49ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 4374923586338849842}
+  heightmapResolution: 513
+  terrainSize: 512
+  terrainHeight: 100
+  renderRadius: 1
+  terrainMaterial: {fileID: 2100000, guid: af57ccc091f9f97409c1091f389c53dd, type: 2}
+  noiseScale: 0.01
+  noiseAmplitude: 1
+  worldSeed: 1337
+  blendWidth: 5
+  biomeManager: {fileID: 216667308}
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
