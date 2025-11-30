@@ -27,8 +27,4 @@ public class BiomeDefinition : ScriptableObject
     public AudioClip ambientSound;
     public Color ambientTint = Color.white;
     public float ambientIntensity = 1f;
-    internal TerrainLayer biomeMaterial;
-    object biomeMaterial1;
-
-    // Future: heightCurve, heightMultiplier, custom handlers, etc.
 }

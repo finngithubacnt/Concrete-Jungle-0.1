@@ -68,10 +68,12 @@ public class DynamicPersistentTerrain : MonoBehaviour
                 if (!activeTiles.ContainsKey(tilePos))
                 {
                     Terrain newTile = CreateOrLoadTile(tilePos);
-                    BiomeAssignment biomeAssignment = biomeManager.GetBiomeForTile(tilePos);
-                    BiomeDefinition biome = biomeAssignment.biome;
-                    WorldTile worldTile = newTile.gameObject.AddComponent<WorldTile>();
-                    worldTile.Initialize(tilePos, biome, newTile);
+                    
+                    if (biomeManager != null)
+                    {
+                        biomeManager.ApplyBiomeEffects(newTile, tilePos, 3);
+                    }
+                    
                     activeTiles.Add(tilePos, newTile);
                 }
             }

@@ -13,7 +13,7 @@ public class WorldTile : MonoBehaviour
     public void Start()
     {
 
-        Initialize(Vector2Int coord, BiomeDefinition biome, Terrain terrainRef);
+       
     }
     public void Initialize(Vector2Int coord, BiomeDefinition biome, Terrain terrainRef)
     {
@@ -34,13 +34,30 @@ public class WorldTile : MonoBehaviour
             return;
         }
 
-        // Example biome terrain layer override
-        if (assignedBiome.biomeMaterial != null)
+        if (assignedBiome.terrainLayers != null && assignedBiome.terrainLayers.Length > 0)
         {
-            Debug.Log("Applying biome terrain layers.");
-            terrain.terrainData.terrainLayers = new TerrainLayer[] { assignedBiome.biomeMaterial };
+            Debug.Log($"Applying {assignedBiome.terrainLayers.Length} terrain layers from biome '{assignedBiome.biomeName}'");
+            terrain.terrainData.terrainLayers = assignedBiome.terrainLayers;
+            
+            int alphamapWidth = terrain.terrainData.alphamapWidth;
+            int alphamapHeight = terrain.terrainData.alphamapHeight;
+            int layerCount = assignedBiome.terrainLayers.Length;
+            
+            float[,,] alphaMaps = new float[alphamapWidth, alphamapHeight, layerCount];
+            
+            for (int y = 0; y < alphamapHeight; y++)
+            {
+                for (int x = 0; x < alphamapWidth; x++)
+                {
+                    alphaMaps[x, y, 0] = 1.0f;
+                }
+            }
+            
+            terrain.terrainData.SetAlphamaps(0, 0, alphaMaps);
         }
-
-        // Example: adjust terrain height multiplier or foliage density later
+        else
+        {
+            Debug.LogWarning($"Biome '{assignedBiome.biomeName}' has no terrain layers assigned!");
+        }
     }
 }
