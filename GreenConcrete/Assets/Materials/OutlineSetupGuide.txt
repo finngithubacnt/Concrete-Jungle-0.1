@@ -1,0 +1,174 @@
+HDRP OUTLINE EFFECT - SETUP GUIDE (Unity 6 HDRP 17.0.4)
+========================================================
+
+TWO METHODS PROVIDED:
+--------------------
+
+METHOD 1: CUSTOM PASS OUTLINE (Recommended - Most Flexible)
+METHOD 2: SHADER GRAPH OUTLINE (Manual Creation Required)
+
+═══════════════════════════════════════════════════════════
+
+METHOD 1: CUSTOM PASS OUTLINE SETUP
+===================================
+
+FILES CREATED:
+- /Assets/Scripts/OutlineCustomPass.cs
+- /Assets/Scripts/OutlinePassShader.shader
+
+STEP 1: SET UP CUSTOM PASS VOLUME
+----------------------------------
+1. In your scene Hierarchy, right-click → Volume → Custom Pass
+2. This creates a "Custom Pass" GameObject
+3. Select it in the Inspector
+
+STEP 2: ADD OUTLINE CUSTOM PASS
+-------------------------------
+1. In the Custom Pass Volume component, click "Add Custom Pass"
+2. Select "OutlineCustomPass" from the dropdown
+3. Configure settings:
+
+   OUTLINE SETTINGS:
+   - Outline Layer: Select layer for objects to outline (e.g., "Player")
+   - Outline Color: Choose outline color (default: White)
+   - Outline Thickness: 1-10 (adjust for desired thickness)
+
+   ADVANCED SETTINGS:
+   - Depth Sensitivity: 0.1 (edge detection based on depth)
+   - Normals Sensitivity: 0.5 (edge detection based on surface normals)
+   - Use Color Sensitivity: false (optional color-based detection)
+   - Color Sensitivity: 0.1 (if enabled)
+
+STEP 3: ASSIGN OBJECTS TO OUTLINE LAYER
+---------------------------------------
+1. Create a new Layer (Edit → Project Settings → Tags and Layers)
+   - Add layer name: "Outline" (or any name)
+2. Select objects you want to outline (e.g., Player GameObject)
+3. In Inspector, set Layer to "Outline"
+4. In Custom Pass Volume, set "Outline Layer" to match
+
+STEP 4: CONFIGURE INJECTION POINT (Optional)
+--------------------------------------------
+In Custom Pass Volume:
+- Injection Point: "After Post Process" (recommended)
+  - OR "Before Post Process" for different effect
+
+DONE! Your outlines should now be visible in Scene/Game view.
+
+═══════════════════════════════════════════════════════════
+
+METHOD 2: SHADER GRAPH OUTLINE (Manual Creation)
+================================================
+
+Since Shader Graph files are binary and can't be created via script,
+here's how to create one manually:
+
+STEP 1: CREATE SHADER GRAPH
+---------------------------
+1. Right-click in Project → Create → Shader Graph → HDRP → Lit Shader Graph
+2. Name it "OutlineShader"
+3. Double-click to open Shader Graph Editor
+
+STEP 2: CONFIGURE GRAPH SETTINGS
+--------------------------------
+1. Click "Graph Inspector" (top-right)
+2. Set "Material" to "Lit"
+3. Enable "Two Sided"
+4. Set "Surface Type" to "Transparent" (if you want overlay)
+
+STEP 3: CREATE OUTLINE LOGIC
+----------------------------
+1. Add nodes:
+   - Position (Object Space)
+   - Normal Vector (Object Space)
+   - Multiply (Normal * Outline Thickness)
+   - Add (Position + Offset Normal)
+   - Transform (Object to World)
+
+2. Create Properties:
+   - "Outline Thickness" (Float, Range 0-0.1, Default 0.01)
+   - "Outline Color" (Color, Default White)
+
+3. Connect nodes:
+   Position → Add (A)
+   Normal → Multiply (A)
+   Outline Thickness (Property) → Multiply (B)
+   Multiply → Add (B)
+   Add → Transform → Vertex Position (Master Stack)
+   Outline Color → Base Color (Master Stack)
+
+STEP 4: SAVE AND CREATE MATERIAL
+--------------------------------
+1. Save Shader Graph (Ctrl+S)
+2. Right-click shader → Create → Material
+3. Apply to your objects
+
+═══════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+===============
+
+Q: Outlines not appearing
+A: - Check Layer mask is set correctly in Custom Pass
+   - Ensure objects are on the outline layer
+   - Check Custom Pass Volume is active in scene
+   - Verify shader compiled without errors (Console)
+
+Q: Outlines too thick/thin
+A: Adjust "Outline Thickness" parameter (1-10 range)
+
+Q: Outlines have gaps
+A: Increase "Depth Sensitivity" and "Normals Sensitivity"
+
+Q: Performance issues
+A: - Reduce "Outline Thickness"
+   - Disable "Use Color Sensitivity"
+   - Use Method 2 (Shader Graph) for simpler effect
+
+Q: Shader compilation errors
+A: Ensure HDRP package version 17.0.4 is correctly installed
+
+═══════════════════════════════════════════════════════════
+
+CUSTOMIZATION OPTIONS
+=====================
+
+CUSTOM PASS METHOD:
+- Modify OutlinePassShader.shader for custom edge detection
+- Adjust Sobel filter kernel size for different edge styles
+- Add multiple outline layers with different colors
+
+SHADER GRAPH METHOD:
+- Add texture masks for selective outlines
+- Animate outline thickness with Time node
+- Add fresnel effect for view-angle based outlines
+- Use gradient colors for multi-color outlines
+
+═══════════════════════════════════════════════════════════
+
+RECOMMENDED SETTINGS FOR DIFFERENT USE CASES
+============================================
+
+STYLIZED/TOON LOOK:
+- Outline Thickness: 3-5
+- Outline Color: Black (0, 0, 0)
+- Depth Sensitivity: 0.3
+- Normals Sensitivity: 0.7
+
+SUBTLE HIGHLIGHT:
+- Outline Thickness: 1-2
+- Outline Color: White or Yellow
+- Depth Sensitivity: 0.05
+- Normals Sensitivity: 0.3
+
+SELECTION INDICATOR:
+- Outline Thickness: 2-4
+- Outline Color: Bright color (e.g., Cyan)
+- Depth Sensitivity: 0.1
+- Normals Sensitivity: 0.5
+- Enable Color Sensitivity for better object separation
+
+GLOWING EDGE:
+- Outline Thickness: 5-8
+- Outline Color: Emission color with HDR
+- Increase color intensity beyond 1.0 for bloom effect

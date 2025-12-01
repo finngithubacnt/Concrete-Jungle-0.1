@@ -19,7 +19,7 @@ public class DynamicPersistentTerrain : MonoBehaviour
     public int worldSeed = 1337;
 
     [Header("Edge Blending")]
-    [Range(-50, 50)] public int blendWidth = 5;
+    [Range(1, 50)] public int blendWidth = 5;
 
     [Header("Biome")]
     public BiomeManager biomeManager;
