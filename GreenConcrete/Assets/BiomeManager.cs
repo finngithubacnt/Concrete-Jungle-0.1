@@ -341,8 +341,107 @@ public class BiomeManager : MonoBehaviour
                     converted[x, y, l] = alphaMaps[y, x, l];
 
         terrain.terrainData.SetAlphamaps(0, 0, converted);
+    }
 
+    public void ApplyBiomeHeightModification(Terrain terrain, Vector2Int tileCoord, int seed, int influenceCount = 3)
+    {
+        if (terrain == null) return;
+
+        var influences = GetBiomeInfluences(tileCoord, influenceCount);
         
+        bool anyHeightModification = false;
+        foreach (var inf in influences)
+        {
+            if (inf.biome != null && inf.biome.modifyHeight)
+            {
+                anyHeightModification = true;
+                break;
+            }
+        }
 
+        if (!anyHeightModification) return;
+
+        int heightmapWidth = terrain.terrainData.heightmapResolution;
+        int heightmapHeight = terrain.terrainData.heightmapResolution;
+        float[,] heights = terrain.terrainData.GetHeights(0, 0, heightmapWidth, heightmapHeight);
+
+        for (int y = 0; y < heightmapHeight; y++)
+        {
+            for (int x = 0; x < heightmapWidth; x++)
+            {
+                float originalHeight = heights[y, x];
+                float modifiedHeight = originalHeight;
+                float totalWeight = 0f;
+                float accumulatedHeight = 0f;
+
+                foreach (var inf in influences)
+                {
+                    if (inf.biome == null || !inf.biome.modifyHeight) continue;
+
+                    float biomeHeight = originalHeight;
+
+                    if (inf.biome.biomeNoiseAmplitude > 0f)
+                    {
+                        float worldX = (x + tileCoord.x * (heightmapWidth - 1)) * inf.biome.biomeNoiseScale;
+                        float worldY = (y + tileCoord.y * (heightmapHeight - 1)) * inf.biome.biomeNoiseScale;
+                        float noise = Mathf.PerlinNoise(worldX + seed, worldY + seed);
+                        biomeHeight += noise * inf.biome.biomeNoiseAmplitude;
+                    }
+
+                    biomeHeight = biomeHeight * inf.biome.heightMultiplier + inf.biome.baseHeightOffset;
+
+                    if (inf.biome.heightCurve != null && inf.biome.heightCurve.keys.Length > 0)
+                    {
+                        biomeHeight = inf.biome.heightCurve.Evaluate(Mathf.Clamp01(biomeHeight));
+                    }
+
+                    accumulatedHeight += biomeHeight * inf.blend;
+                    totalWeight += inf.blend;
+                }
+
+                if (totalWeight > 0f)
+                {
+                    modifiedHeight = accumulatedHeight / totalWeight;
+                }
+
+                heights[y, x] = Mathf.Clamp01(modifiedHeight);
+            }
+        }
+
+        terrain.terrainData.SetHeights(0, 0, heights);
+    }
+
+    public GameObject SpawnTilePrefab(Terrain terrain, Vector2Int tileCoord)
+    {
+        if (terrain == null) return null;
+
+        var assignment = GetBiomeForTile(tileCoord);
+        if (assignment.biome == null || assignment.biome.tilePrefab == null) return null;
+
+        Vector3 terrainPos = terrain.transform.position;
+        Vector3 terrainSize = terrain.terrainData.size;
+        Vector3 centerPos = terrainPos + new Vector3(terrainSize.x * 0.5f, 0f, terrainSize.z * 0.5f);
+
+        float normalizedX = 0.5f;
+        float normalizedZ = 0.5f;
+        float sampledHeight = terrain.terrainData.GetInterpolatedHeight(normalizedX, normalizedZ);
+        
+        Vector3 spawnPos = new Vector3(
+            centerPos.x + assignment.biome.prefabPositionOffset.x,
+            terrainPos.y + sampledHeight + assignment.biome.prefabPositionOffset.y,
+            centerPos.z + assignment.biome.prefabPositionOffset.z
+        );
+
+        Quaternion rotation = Quaternion.identity;
+        if (assignment.biome.randomRotation)
+        {
+            rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        }
+
+        GameObject spawnedPrefab = Instantiate(assignment.biome.tilePrefab, spawnPos, rotation);
+        spawnedPrefab.name = $"{assignment.biome.tilePrefab.name}_{tileCoord.x}_{tileCoord.y}";
+        spawnedPrefab.transform.SetParent(terrain.transform);
+
+        return spawnedPrefab;
     }
 }

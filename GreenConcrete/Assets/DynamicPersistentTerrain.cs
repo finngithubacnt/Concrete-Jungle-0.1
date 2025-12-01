@@ -22,10 +22,18 @@ public class DynamicPersistentTerrain : MonoBehaviour
     [Range(-50, 50)] public int blendWidth = 5;
 
     [Header("Biome")]
-    public BiomeManager biomeManager; //inspector
+    public BiomeManager biomeManager;
+
+    [Header("Biome Features")]
+    [Tooltip("Apply biome-specific height modifications to terrain.")]
+    public bool applyBiomeHeightModifications = true;
+
+    [Tooltip("Spawn tile prefabs defined in biome definitions.")]
+    public bool spawnTilePrefabs = true;
 
     private Dictionary<Vector2Int, Terrain> activeTiles = new Dictionary<Vector2Int, Terrain>();
     private Dictionary<Vector2Int, float[,]> savedHeights = new Dictionary<Vector2Int, float[,]>();
+    private Dictionary<Vector2Int, GameObject> tilePrefabs = new Dictionary<Vector2Int, GameObject>();
     private Vector2Int currentCenter;
 
     void Start()
@@ -59,6 +67,8 @@ public class DynamicPersistentTerrain : MonoBehaviour
     void UpdateTerrainGrid(BiomeManager biomeManager)
     {
         Vector2Int playerGrid = GetPlayerGridPos();
+        List<Vector2Int> newlyCreatedTiles = new List<Vector2Int>();
+
         for (int gx = -renderRadius; gx <= renderRadius; gx++)
         {
             for (int gz = -renderRadius; gz <= renderRadius; gz++)
@@ -71,13 +81,37 @@ public class DynamicPersistentTerrain : MonoBehaviour
                     
                     if (biomeManager != null)
                     {
+                        if (applyBiomeHeightModifications)
+                        {
+                            biomeManager.ApplyBiomeHeightModification(newTile, tilePos, worldSeed, 3);
+                        }
+
                         biomeManager.ApplyBiomeEffects(newTile, tilePos, 3);
+
+                        if (spawnTilePrefabs)
+                        {
+                            GameObject prefab = biomeManager.SpawnTilePrefab(newTile, tilePos);
+                            if (prefab != null)
+                            {
+                                tilePrefabs[tilePos] = prefab;
+                            }
+                        }
                     }
                     
                     activeTiles.Add(tilePos, newTile);
+                    newlyCreatedTiles.Add(tilePos);
                 }
             }
         }
+
+        foreach (Vector2Int tilePos in newlyCreatedTiles)
+        {
+            if (activeTiles.TryGetValue(tilePos, out Terrain terrain))
+            {
+                ApplyEdgeBlending(tilePos, terrain);
+            }
+        }
+
         List<Vector2Int> toRemove = new List<Vector2Int>();
         foreach (var kvp in activeTiles)
         {
@@ -85,6 +119,13 @@ public class DynamicPersistentTerrain : MonoBehaviour
                 Mathf.Abs(kvp.Key.y - playerGrid.y) > renderRadius + 1)
             {
                 SaveTileData(kvp.Key, kvp.Value.terrainData);
+                
+                if (tilePrefabs.ContainsKey(kvp.Key))
+                {
+                    Destroy(tilePrefabs[kvp.Key]);
+                    tilePrefabs.Remove(kvp.Key);
+                }
+                
                 Destroy(kvp.Value.gameObject);
                 toRemove.Add(kvp.Key);
             }
@@ -142,37 +183,18 @@ public class DynamicPersistentTerrain : MonoBehaviour
             }
         }
 
-        BlendEdges(gridPos, heights);
         return heights;
     }
 
-    void BlendEdges(Vector2Int gridPos, float[,] heights)
+    void ApplyEdgeBlending(Vector2Int gridPos, Terrain terrain)
     {
+        if (terrain == null) return;
+
         int res = heightmapResolution;
-        // enforce sensible, non-negative blend width and prevent out-of-range indexing
         int bw = Mathf.Clamp(blendWidth, 1, Mathf.Max(1, res / 2));
 
-        // helper to fetch neighbor heights (prefer active tile data, otherwise saved data)
-        float[,] GetNeighborHeights(Vector2Int pos, out Terrain neighborTerrain, out bool neighborActive)
-        {
-            neighborTerrain = null;
-            neighborActive = false;
-            if (activeTiles.TryGetValue(pos, out neighborTerrain) && neighborTerrain != null)
-            {
-                // GetHeights returns a copy so safe to mutate and write back later
-                neighborActive = true;
-                return neighborTerrain.terrainData.GetHeights(0, 0, res, res);
-            }
+        float[,] heights = terrain.terrainData.GetHeights(0, 0, res, res);
 
-            if (savedHeights.TryGetValue(pos, out var saved))
-            {
-                return saved;
-            }
-
-            neighborTerrain = null;
-            neighborActive = false;
-            return null;
-        }
         var dirs = new (Vector2Int offset, string edge)[]
         {
             (Vector2Int.up, "north"),
@@ -181,58 +203,55 @@ public class DynamicPersistentTerrain : MonoBehaviour
             (Vector2Int.right, "east")
         };
 
+        bool heightsModified = false;
+
         foreach (var dir in dirs)
         {
             Vector2Int nPos = gridPos + dir.offset;
-            var neighborHeights = GetNeighborHeights(nPos, out Terrain neighborTerrain, out bool neighborActive);
-            if (neighborHeights == null)
+
+            if (!activeTiles.TryGetValue(nPos, out Terrain neighborTerrain) || neighborTerrain == null)
                 continue;
 
-           
+            float[,] neighborHeights = neighborTerrain.terrainData.GetHeights(0, 0, res, res);
             bool neighborModified = false;
 
             for (int i = 0; i < res; i++)
             {
                 for (int b = 0; b < bw; b++)
                 {
-                    float alpha = (b + 1f) / (bw + 1f); // smooth ramp 
+                    float alpha = (b + 1f) / (bw + 1f);
+
                     switch (dir.edge)
                     {
-                        case "north"://z+
-                        {
-                        int nRow = b;
-                        int myRow = res - 1 - b;
-                        float nVal = neighborHeights[nRow, i];
-                        float myVal = heights[myRow, i];
-                        float blended = Mathf.Lerp(nVal, myVal, alpha);
-                        heights[myRow, i] = blended;
-                        if (neighborActive)
-                         {
-                             neighborHeights[nRow, i] = blended;
-                             neighborModified = true;
-                         }
-                        }
-                            
-                        break;
-
-                        case "south"://z-
-                        {
-                         int nRow = res - 1 - b;
-                         int myRow = b;
-                         float nVal = neighborHeights[nRow, i];
-                         float myVal = heights[myRow, i];
-                         float blended = Mathf.Lerp(nVal, myVal, alpha);
-                         heights[myRow, i] = blended;
-                         if (neighborActive)
+                        case "north":
                             {
-                              neighborHeights[nRow, i] = blended;
-                              neighborModified = true;
+                                int nRow = b;
+                                int myRow = res - 1 - b;
+                                float nVal = neighborHeights[nRow, i];
+                                float myVal = heights[myRow, i];
+                                float blended = Mathf.Lerp(nVal, myVal, alpha);
+                                heights[myRow, i] = blended;
+                                neighborHeights[nRow, i] = blended;
+                                heightsModified = true;
+                                neighborModified = true;
                             }
-                        }
-                        break;
+                            break;
 
-                        case "west"://x-
-                           
+                        case "south":
+                            {
+                                int nRow = res - 1 - b;
+                                int myRow = b;
+                                float nVal = neighborHeights[nRow, i];
+                                float myVal = heights[myRow, i];
+                                float blended = Mathf.Lerp(nVal, myVal, alpha);
+                                heights[myRow, i] = blended;
+                                neighborHeights[nRow, i] = blended;
+                                heightsModified = true;
+                                neighborModified = true;
+                            }
+                            break;
+
+                        case "west":
                             {
                                 int nCol = res - 1 - b;
                                 int myCol = b;
@@ -240,15 +259,13 @@ public class DynamicPersistentTerrain : MonoBehaviour
                                 float myVal = heights[i, myCol];
                                 float blended = Mathf.Lerp(nVal, myVal, alpha);
                                 heights[i, myCol] = blended;
-                                if (neighborActive)
-                                {
-                                    neighborHeights[i, nCol] = blended;
-                                    neighborModified = true;
-                               }
-                      }
-                        break;
+                                neighborHeights[i, nCol] = blended;
+                                heightsModified = true;
+                                neighborModified = true;
+                            }
+                            break;
 
-                        case "east"://x+
+                        case "east":
                             {
                                 int nCol = b;
                                 int myCol = res - 1 - b;
@@ -256,23 +273,32 @@ public class DynamicPersistentTerrain : MonoBehaviour
                                 float myVal = heights[i, myCol];
                                 float blended = Mathf.Lerp(nVal, myVal, alpha);
                                 heights[i, myCol] = blended;
-                                if (neighborActive)
-                                {
-                                    neighborHeights[i, nCol] = blended;
-                                    neighborModified = true;
-                                }
-                              }
-                        break;
+                                neighborHeights[i, nCol] = blended;
+                                heightsModified = true;
+                                neighborModified = true;
+                            }
+                            break;
                     }
-             }
+                }
             }
-            if (neighborActive && neighborModified && neighborTerrain != null)
+
+            if (neighborModified)
             {
                 neighborTerrain.terrainData.SetHeights(0, 0, neighborHeights);
+                
                 float[,] neighborCopy = new float[res, res];
                 System.Array.Copy(neighborHeights, neighborCopy, neighborHeights.Length);
                 savedHeights[nPos] = neighborCopy;
             }
+        }
+
+        if (heightsModified)
+        {
+            terrain.terrainData.SetHeights(0, 0, heights);
+            
+            float[,] heightsCopy = new float[res, res];
+            System.Array.Copy(heights, heightsCopy, heights.Length);
+            savedHeights[gridPos] = heightsCopy;
         }
     }
     void SaveTileData(Vector2Int gridPos, TerrainData data)

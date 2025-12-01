@@ -1,0 +1,79 @@
+BIOME SYSTEM - NEW FEATURES GUIDE
+==================================
+
+UPDATED: BiomeDefinition, BiomeManager, DynamicPersistentTerrain
+
+NEW BIOME DEFINITION OPTIONS:
+-----------------------------
+
+1. HEIGHT MODIFICATION
+   - modifyHeight (bool): Enable/disable height changes for this biome
+   - heightMultiplier (0-3): Multiplies terrain height (>1 = hills, <1 = flatten)
+   - baseHeightOffset (-1 to 1): Raises/lowers entire terrain
+   - biomeNoiseScale (0-0.1): Scale of additional noise pattern
+   - biomeNoiseAmplitude (0-2): Strength of hills/valleys created by noise
+   - heightCurve (AnimationCurve): Custom height shaping curve
+
+2. TILE PREFAB SPAWNING
+   - tilePrefab (GameObject): Prefab to spawn at tile center (villages, structures, etc.)
+   - prefabPositionOffset (Vector3): Offset from tile center
+   - randomRotation (bool): Random Y-axis rotation for prefab
+
+USAGE EXAMPLES:
+--------------
+
+FOREST BIOME (Rolling Hills):
+- modifyHeight: true
+- heightMultiplier: 1.2
+- baseHeightOffset: 0.1
+- biomeNoiseScale: 0.02
+- biomeNoiseAmplitude: 0.3
+- tilePrefab: (optional) TreeCamp prefab
+
+GRASSLANDS BIOME (Flat Plains):
+- modifyHeight: true
+- heightMultiplier: 0.8
+- baseHeightOffset: 0
+- biomeNoiseAmplitude: 0.1
+- tilePrefab: (optional) Farm prefab
+
+OCEAN BIOME (Deep Valleys):
+- modifyHeight: true
+- heightMultiplier: 0.5
+- baseHeightOffset: -0.3
+- biomeNoiseAmplitude: 0.15
+- tilePrefab: (optional) IslandRock prefab
+
+MOUNTAIN BIOME (Extreme Hills):
+- modifyHeight: true
+- heightMultiplier: 2.0
+- baseHeightOffset: 0.4
+- biomeNoiseScale: 0.015
+- biomeNoiseAmplitude: 1.5
+- heightCurve: Custom curve with steep peaks
+
+DYNAMIC TERRAIN SETTINGS:
+-------------------------
+
+In DynamicPersistentTerrain component:
+- applyBiomeHeightModifications (bool): Enable biome height changes
+- spawnTilePrefabs (bool): Enable tile prefab spawning
+
+TECHNICAL NOTES:
+---------------
+
+1. Height modifications blend smoothly between multiple biome influences
+2. Tile prefabs are parented to their terrain tile
+3. Prefabs are automatically destroyed when tiles are unloaded
+4. Height changes are applied BEFORE texture painting
+5. All changes are seed-based and reproducible
+
+RECOMMENDED WORKFLOW:
+--------------------
+
+1. Create BiomeDefinition asset (Right-click > Create > Biomes > Biome Definition)
+2. Assign TerrainLayers for texture painting
+3. Configure height modification settings
+4. (Optional) Assign tile prefab
+5. Add to BiomeManager's biomeDefinitions list
+6. Test in Play mode

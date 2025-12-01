@@ -1,0 +1,95 @@
+EDGE BLENDING - UPDATED IMPLEMENTATION
+======================================
+
+CHANGES APPLIED:
+---------------
+
+1. REMOVED edge blending from GenerateTerrainHeights()
+   - Edge blending no longer happens during initial terrain generation
+   - Base terrain heights are now generated without blending
+
+2. CREATED new ApplyEdgeBlending() method
+   - Dedicated method that runs AFTER all terrain modifications
+   - Blends edges between neighboring active tiles only
+   - Updates both current tile and neighboring tiles simultaneously
+   - Saves blended heights to persistence system
+
+3. UPDATED UpdateTerrainGrid() execution order
+   - Step 1: Create terrain tile with base heights
+   - Step 2: Apply biome height modifications (if enabled)
+   - Step 3: Apply biome texture painting
+   - Step 4: Spawn tile prefabs (if enabled)
+   - Step 5: Apply edge blending to newly created tiles ← NEW!
+
+EXECUTION ORDER (Per Tile):
+---------------------------
+
+1. CreateOrLoadTile()
+   └─ GenerateTerrainHeights() - Base noise generation only
+
+2. ApplyBiomeHeightModification() [BiomeManager]
+   └─ Applies height multipliers, offsets, curves, and biome-specific noise
+
+3. ApplyBiomeEffects() [BiomeManager]
+   └─ Paints terrain textures based on biome influences
+
+4. SpawnTilePrefab() [BiomeManager]
+   └─ Spawns optional prefabs on tile
+
+5. ApplyEdgeBlending() ← Runs LAST
+   └─ Seamlessly blends edges with neighboring tiles
+   └─ Updates both tiles and saves to persistence
+
+WHY THIS WORKS BETTER:
+----------------------
+
+BEFORE:
+- Edge blending happened during base generation
+- Biome modifications applied after blending
+- Result: Visible seams between tiles with different biome heights
+
+AFTER:
+- All biome modifications complete first
+- Edge blending applies to final terrain state
+- Result: Smooth transitions even with different biome heights
+
+TECHNICAL DETAILS:
+-----------------
+
+- Blending only occurs with active (loaded) neighboring tiles
+- Blend width controlled by 'blendWidth' parameter (default: 5)
+- Uses Lerp interpolation for smooth height transitions
+- Both tiles update simultaneously to ensure perfect alignment
+- Changes saved to savedHeights dictionary for persistence
+
+SETTINGS:
+--------
+
+In DynamicPersistentTerrain component:
+- blendWidth (Range -50 to 50): Number of edge pixels to blend
+  - Recommended: 3-10 for smooth transitions
+  - Higher values = smoother but more blending area
+  - Lower values = sharper transitions
+
+PERFORMANCE NOTES:
+-----------------
+
+- Edge blending runs once per newly created tile
+- Only blends with active neighbors (not saved/unloaded tiles)
+- Minimal performance impact due to efficient implementation
+- Blending updates are saved for consistency when tiles reload
+
+TROUBLESHOOTING:
+---------------
+
+Q: I still see seams between tiles
+A: Increase blendWidth to 8-10 for smoother transitions
+
+Q: Edges look too smooth/blurred
+A: Decrease blendWidth to 3-5 for sharper biome boundaries
+
+Q: Performance issues when loading tiles
+A: Disable 'applyBiomeHeightModifications' temporarily to isolate
+
+Q: Terrain heights don't persist correctly
+A: Edge blending saves to savedHeights automatically - check SaveTileData()
