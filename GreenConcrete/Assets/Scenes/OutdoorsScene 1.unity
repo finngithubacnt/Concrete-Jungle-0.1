@@ -145,11 +145,11 @@ Transform:
   m_GameObject: {fileID: 216667305}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -669.2517, y: -248.32135, z: 241.36563}
+  m_LocalPosition: {x: -657.94745, y: 20.354523, z: 253.79698}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 923379485}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &216667308
 MonoBehaviour:
@@ -165,15 +165,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileSize: 512
   worldExtentInTiles: 62
-  centerCount: 207
+  centerCount: 200
   worldSeed: 1337
-  borderNoiseScale: 0.08
+  borderNoiseScale: 5.14
   borderNoiseAmplitudeInTiles: 3.01
   neighborLookups: 1
   biomeDefinitions:
   - {fileID: 11400000, guid: 8f36e11351161654eb46d46f2d0fef11, type: 2}
   - {fileID: 11400000, guid: 27087637e9bd2cf4bb57e82cc94c7e97, type: 2}
   - {fileID: 11400000, guid: 3ad3c5b283ba35d4dad61b2c40345066, type: 2}
+  - {fileID: 11400000, guid: b8dc373b3219bd542a89650fab18af8b, type: 2}
+  - {fileID: 11400000, guid: 12f88c9d4c19b8a4db518142e2b4692c, type: 2}
+  - {fileID: 11400000, guid: 26262e3d81f85ab419f6c3b4ca44251b, type: 2}
 --- !u!1 &250122914
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +207,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1536674377}
-  - {fileID: 923379485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &461518144
@@ -341,13 +343,11 @@ Transform:
   m_GameObject: {fileID: 923379484}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 11.304234, y: 268.67587, z: 12.43135}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 216667307}
-  - {fileID: 1820395368}
-  m_Father: {fileID: 250122915}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923903970
 GameObject:
@@ -558,11 +558,11 @@ Transform:
   m_GameObject: {fileID: 1820395366}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.304234, y: -268.67587, z: -12.43135}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 923379485}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1820395369
 MonoBehaviour:
@@ -582,10 +582,10 @@ MonoBehaviour:
   terrainHeight: 100
   renderRadius: 4
   terrainMaterial: {fileID: 2100000, guid: af57ccc091f9f97409c1091f389c53dd, type: 2}
-  noiseScale: 0.01
+  noiseScale: 0.005
   noiseAmplitude: 1
   worldSeed: 11309
-  blendWidth: 50
+  blendWidth: 1
   biomeManager: {fileID: 216667308}
   applyBiomeHeightModifications: 1
   spawnTilePrefabs: 1
@@ -1261,3 +1261,6 @@ SceneRoots:
   - {fileID: 923903974}
   - {fileID: 1937471730}
   - {fileID: 250122915}
+  - {fileID: 216667307}
+  - {fileID: 1820395368}
+  - {fileID: 923379485}

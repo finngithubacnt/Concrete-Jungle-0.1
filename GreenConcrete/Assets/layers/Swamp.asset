@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5b1bcfb4d6811341b1837e06fde98a8, type: 3}
-  m_Name: GrassLands
+  m_Name: Swamp
   m_EditorClassIdentifier: 
-  biomeName: GrassLands
-  debugColor: {r: 0.12631583, g: 1, b: 0, a: 1}
+  biomeName: Swamp
+  debugColor: {r: 0, g: 0.5471698, b: 0.36877745, a: 1}
   radiusInTiles: 3
   radiusVariation: 0.2
   terrainLayers:
-  - {fileID: 8574412962073106934, guid: efdb9e11b371664408c421954be63d17, type: 2}
+  - {fileID: 8574412962073106934, guid: 174314370dca2ea499b5740e3885a15e, type: 2}
   modifyHeight: 0
   heightMultiplier: 1
   baseHeightOffset: 0

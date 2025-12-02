@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5b1bcfb4d6811341b1837e06fde98a8, type: 3}
-  m_Name: GrassLands
+  m_Name: City
   m_EditorClassIdentifier: 
-  biomeName: GrassLands
-  debugColor: {r: 0.12631583, g: 1, b: 0, a: 1}
-  radiusInTiles: 3
-  radiusVariation: 0.2
+  biomeName: City
+  debugColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
+  radiusInTiles: 2
+  radiusVariation: 0
   terrainLayers:
-  - {fileID: 8574412962073106934, guid: efdb9e11b371664408c421954be63d17, type: 2}
+  - {fileID: 8574412962073106934, guid: bae7839cc9c584f4ca89a4fbe9f743d8, type: 2}
   modifyHeight: 0
   heightMultiplier: 1
   baseHeightOffset: 0
