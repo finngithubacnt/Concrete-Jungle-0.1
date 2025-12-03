@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Suburb
   debugColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
   radiusInTiles: 1
-  radiusVariation: 1
+  radiusVariation: 0.15
   terrainLayers:
   - {fileID: 8574412962073106934, guid: f7ca47a25f2398f46abd727089df142e, type: 2}
   modifyHeight: 0

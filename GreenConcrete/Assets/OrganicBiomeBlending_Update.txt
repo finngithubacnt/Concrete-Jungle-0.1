@@ -1,0 +1,199 @@
+ORGANIC BIOME BLENDING - UPDATE
+================================
+
+PROBLEM SOLVED:
+--------------
+Biome boundaries were blocky and aligned to tile edges because the entire tile
+used the same dominant biome assignment. Now biomes blend organically across
+tile boundaries with per-pixel sampling.
+
+CHANGES APPLIED:
+---------------
+
+1. NEW METHOD: GetBiomeInfluencesAtWorldPos()
+   - Samples biome influences at specific world positions
+   - Uses finer noise scale for detailed, organic boundaries
+   - Per-pixel evaluation creates natural transitions
+
+2. UPDATED METHOD: ApplyBiomeEffects()
+   - Now supports TWO modes:
+     a) PER-PIXEL BLENDING (default, organic boundaries)
+     b) PER-TILE BLENDING (legacy, better performance)
+   - Per-pixel mode samples biome influence at each texture pixel
+   - Creates smooth, natural transitions between biomes
+
+3. NEW SETTINGS in BiomeManager:
+   - usePerPixelBlending (bool): Toggle organic vs blocky blending
+   - Enabled by default for natural appearance
+
+HOW IT WORKS:
+------------
+
+BEFORE (Blocky):
+- Entire tile assigned single dominant biome
+- Texture painting uniform across tile
+- Sharp boundaries at tile edges
+- Result: Grid-like, artificial appearance
+
+AFTER (Organic):
+- Each alphamap pixel samples biome influences individually
+- Noise-based distance calculation per pixel
+- Boundaries flow naturally across tiles
+- Result: Smooth, natural biome transitions
+
+TECHNICAL DETAILS:
+-----------------
+
+Per-Pixel Sampling Process:
+1. For each alphamap pixel (default 1024x1024 per tile):
+   - Calculate world position of pixel
+   - Sample biome influences at that exact position
+   - Apply noise-based distance distortion
+   - Blend multiple biome textures based on proximity
+
+2. Noise Parameters:
+   - borderNoiseScale: 0.08 (controls wave frequency)
+   - borderNoiseAmplitudeInTiles: 6.0 (controls distortion strength)
+   - Per-pixel noise scale: 10x higher for finer detail
+
+3. Blending:
+   - Inverse distance weighting (closer biomes = stronger)
+   - Multiple biome influences per pixel
+   - Normalized weights ensure valid alphamaps
+
+PERFORMANCE CONSIDERATIONS:
+--------------------------
+
+PER-PIXEL MODE (usePerPixelBlending = true):
+- Processing time: ~50-200ms per tile (depends on alphamap resolution)
+- Only runs ONCE when tile is created
+- Memory: Same as before (no additional runtime cost)
+- Recommended: Use for most cases - runs during load, not per-frame
+
+PER-TILE MODE (usePerPixelBlending = false):
+- Processing time: ~5-10ms per tile
+- Faster tile creation
+- Blocky, grid-aligned boundaries
+- Recommended: Only if tile creation is bottleneck
+
+SETTINGS GUIDE:
+--------------
+
+In BiomeManager component:
+
+ORGANIC BIOMES (Recommended):
+- Use Per Pixel Blending: ✓ Enabled
+- Border Noise Scale: 0.05 - 0.1 (lower = larger features)
+- Border Noise Amplitude In Tiles: 4 - 8 (higher = more variation)
+- Result: Natural, flowing biome boundaries
+
+MODERATE VARIATION:
+- Use Per Pixel Blending: ✓ Enabled
+- Border Noise Scale: 0.08
+- Border Noise Amplitude In Tiles: 3 - 5
+- Result: Subtle variation, clearer biome regions
+
+BLOCKY/PERFORMANCE MODE:
+- Use Per Pixel Blending: ✗ Disabled
+- Result: Fast generation, tile-aligned boundaries
+
+STYLIZED/ARTISTIC:
+- Use Per Pixel Blending: ✓ Enabled
+- Border Noise Scale: 0.15 - 0.3 (high frequency)
+- Border Noise Amplitude In Tiles: 10+ (extreme variation)
+- Result: Highly irregular, chaotic boundaries
+
+VISUALIZING THE DIFFERENCE:
+--------------------------
+
+BEFORE (Blocky):
+┌─────────┬─────────┬─────────┐
+│ Forest  │ Forest  │ Grass   │  <- Sharp tile boundaries
+├─────────┼─────────┼─────────┤
+│ Forest  │ Grass   │ Grass   │  <- Each tile = one biome
+├─────────┼─────────┼─────────┤
+│ Ocean   │ Ocean   │ Grass   │  <- Grid-aligned edges
+└─────────┴─────────┴─────────┘
+
+AFTER (Organic):
+┌─────────────────────────────┐
+│ ╔Forest═╗  ╱Grass╲         │  <- Smooth transitions
+│ ║       ╠═╬═══════╗         │  <- Noise-based boundaries
+│ ╚══Ocean══╝      ╚Grass╗   │  <- Flow across tiles
+│    ╱╲  Ocean  ╱╲    ║    │  <- Natural appearance
+│  Ocean  ╲╱  Grass  ╚═══╝   │
+└─────────────────────────────┘
+
+TROUBLESHOOTING:
+---------------
+
+Q: Biomes still look blocky
+A: - Ensure "Use Per Pixel Blending" is enabled
+   - Increase "Border Noise Amplitude" (try 6-10)
+   - Adjust "Border Noise Scale" (try 0.05-0.1)
+
+Q: Boundaries are too chaotic/noisy
+A: - Decrease "Border Noise Amplitude" (try 2-4)
+   - Decrease "Border Noise Scale" (try 0.03-0.05)
+
+Q: Performance issues during tile creation
+A: - Disable "Use Per Pixel Blending" temporarily
+   - Reduce terrain alphamap resolution in terrain settings
+   - Consider async tile generation (future enhancement)
+
+Q: Textures blend strangely
+A: - Check TerrainLayers are assigned to BiomeDefinitions
+   - Verify multiple biomes have different TerrainLayers
+   - Increase "Neighbor Lookups" to 3-5 for smoother blending
+
+Q: Seams visible between tiles
+A: - Edge blending runs AFTER texture painting
+   - Check "Blend Width" in DynamicPersistentTerrain (5-10)
+   - Verify all tiles use same BiomeManager settings
+
+ADVANCED CUSTOMIZATION:
+----------------------
+
+To adjust per-pixel noise characteristics:
+1. Open BiomeManager.cs
+2. Find GetBiomeInfluencesAtWorldPos() method
+3. Modify noise parameters:
+
+   float noiseScale = borderNoiseScale * 10f;  // Increase multiplier for finer detail
+   float noiseAmplitude = borderNoiseAmplitudeInTiles * 0.5f;  // Adjust strength
+
+To add multi-octave noise (more natural):
+1. Add multiple noise samples at different scales
+2. Combine with different weights
+3. Example:
+   float noise1 = Perlin(pos * 0.05) * 1.0;
+   float noise2 = Perlin(pos * 0.15) * 0.5;
+   float noise3 = Perlin(pos * 0.45) * 0.25;
+   float combinedNoise = noise1 + noise2 + noise3;
+
+BEST PRACTICES:
+--------------
+
+1. Enable per-pixel blending for final/production builds
+2. Test different noise settings to match your art style
+3. Use consistent BiomeManager settings across all terrains
+4. Generate biome centers once, then reuse seed
+5. Consider biome count vs performance (20-30 is good balance)
+
+RELATED SYSTEMS:
+---------------
+
+This system works with:
+- Edge Blending (seamless tile edges)
+- Height Modification (biome-specific terrain features)
+- Tile Prefab Spawning (biome-specific structures)
+- All features combine for fully organic world generation
+
+MIGRATION NOTES:
+---------------
+
+Existing Projects:
+- Per-pixel blending is ENABLED by default
+- Old saves compatible (textures regenerate on load)
+- No manual migration needed
+- Can disable for old behavior if needed

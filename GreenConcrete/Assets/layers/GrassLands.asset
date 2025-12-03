@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: GrassLands
   debugColor: {r: 0.12631583, g: 1, b: 0, a: 1}
-  radiusInTiles: 3
-  radiusVariation: 0.2
+  radiusInTiles: 1
+  radiusVariation: 0.15
   terrainLayers:
   - {fileID: 8574412962073106934, guid: efdb9e11b371664408c421954be63d17, type: 2}
   modifyHeight: 0

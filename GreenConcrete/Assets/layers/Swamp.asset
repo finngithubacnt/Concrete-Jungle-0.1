@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Swamp
   debugColor: {r: 0, g: 0.5471698, b: 0.36877745, a: 1}
-  radiusInTiles: 3
-  radiusVariation: 0.2
+  radiusInTiles: 1
+  radiusVariation: 0.15
   terrainLayers:
   - {fileID: 8574412962073106934, guid: 174314370dca2ea499b5740e3885a15e, type: 2}
   modifyHeight: 0

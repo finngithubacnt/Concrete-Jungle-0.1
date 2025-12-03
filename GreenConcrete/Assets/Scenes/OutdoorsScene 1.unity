@@ -164,12 +164,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileSize: 512
-  worldExtentInTiles: 62
-  centerCount: 200
+  worldExtentInTiles: 1
+  centerCount: 5
   worldSeed: 1337
-  borderNoiseScale: 5.14
-  borderNoiseAmplitudeInTiles: 3.01
-  neighborLookups: 1
+  borderNoiseScale: 0.86
+  borderNoiseAmplitudeInTiles: 0.64
+  usePerPixelBlending: 1
+  neighborLookups: 15
   biomeDefinitions:
   - {fileID: 11400000, guid: 8f36e11351161654eb46d46f2d0fef11, type: 2}
   - {fileID: 11400000, guid: 27087637e9bd2cf4bb57e82cc94c7e97, type: 2}
@@ -580,10 +581,10 @@ MonoBehaviour:
   heightmapResolution: 513
   terrainSize: 512
   terrainHeight: 100
-  renderRadius: 4
+  renderRadius: 1
   terrainMaterial: {fileID: 2100000, guid: af57ccc091f9f97409c1091f389c53dd, type: 2}
   noiseScale: 0.005
-  noiseAmplitude: 1
+  noiseAmplitude: 0.5
   worldSeed: 11309
   blendWidth: 1
   biomeManager: {fileID: 216667308}

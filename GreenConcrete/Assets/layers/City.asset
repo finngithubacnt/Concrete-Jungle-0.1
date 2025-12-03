@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: City
   debugColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-  radiusInTiles: 2
-  radiusVariation: 0
+  radiusInTiles: 1
+  radiusVariation: 0.15
   terrainLayers:
   - {fileID: 8574412962073106934, guid: bae7839cc9c584f4ca89a4fbe9f743d8, type: 2}
   modifyHeight: 0

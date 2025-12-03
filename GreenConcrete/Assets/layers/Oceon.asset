@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Oceon
   debugColor: {r: 0, g: 0.05075884, b: 1, a: 1}
-  radiusInTiles: 2
-  radiusVariation: 1
+  radiusInTiles: 1
+  radiusVariation: 0.15
   terrainLayers:
   - {fileID: 8574412962073106934, guid: 4c6fa07eb42dbb547ab85d779f200fb1, type: 2}
   modifyHeight: 1

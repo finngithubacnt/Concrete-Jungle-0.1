@@ -37,6 +37,10 @@ public class BiomeManager : MonoBehaviour
     [Tooltip("How strong the noise distorts the border (in tile units).")]
     public float borderNoiseAmplitudeInTiles = 6f;
 
+    [Header("Texture Blending (Per-Pixel)")]
+    [Tooltip("Enable per-pixel biome sampling for organic boundaries. Disable for better performance (blocky tiles)")]
+    public bool usePerPixelBlending = true;
+
     [Tooltip("How many nearest centers to consider when computing influences (2 is enough for blend).")]
     public int neighborLookups = 3;
 
@@ -214,6 +218,62 @@ public class BiomeManager : MonoBehaviour
         return assignments;
     }
 
+    public List<BiomeAssignment> GetBiomeInfluencesAtWorldPos(Vector2 worldPos, int maxInfluences = 3)
+    {
+        int count = Mathf.Min(maxInfluences, centers.Count);
+        var list = new List<(BiomeCenter center, float dist)>(centers.Count);
+
+        float wx = worldPos.x / tileSize;
+        float wy = worldPos.y / tileSize;
+
+        foreach (var c in centers)
+        {
+            float dx = wx - c.pos.x;
+            float dy = wy - c.pos.y;
+            float d = Mathf.Sqrt(dx * dx + dy * dy);
+
+            float noiseScale = borderNoiseScale * 10f;
+            float nx = worldPos.x * noiseScale;
+            float ny = worldPos.y * noiseScale;
+            float noise = (Mathf.PerlinNoise(nx + worldSeed * 0.1f, ny + worldSeed * 0.1f) - 0.5f) * 2f;
+            
+            float noiseAmplitude = borderNoiseAmplitudeInTiles * 0.5f;
+            float dDistorted = d + noise * noiseAmplitude;
+
+            list.Add((c, dDistorted));
+        }
+
+        list.Sort((a, b) => a.dist.CompareTo(b.dist));
+        float totalInv = 0f;
+        var assignments = new List<BiomeAssignment>();
+
+        for (int i = 0; i < count; i++)
+        {
+            float w = 1f / (1f + list[i].dist);
+            totalInv += w;
+            assignments.Add(new BiomeAssignment
+            {
+                biome = list[i].center.def,
+                blend = 0f,
+                weight = w,
+                centerPosition = list[i].center.pos
+            });
+        }
+
+        for (int i = 0; i < assignments.Count; i++)
+        {
+            assignments[i] = new BiomeAssignment
+            {
+                biome = assignments[i].biome,
+                blend = assignments[i].weight / totalInv,
+                weight = assignments[i].weight / totalInv,
+                centerPosition = assignments[i].centerPosition
+            };
+        }
+
+        return assignments;
+    }
+
     // Editor debug drawing of centers and their radii in tile-space
     void OnDrawGizmosSelected()
     {
@@ -248,7 +308,6 @@ public class BiomeManager : MonoBehaviour
         if (terrain == null) return;
 
         var influences = GetBiomeInfluences(tileCoord, influenceCount);
-        // gather biome data
         var profs = new List<(BiomeDefinition def, BiomeAssignment assign)>();
         foreach (var inf in influences)
         {
@@ -256,13 +315,8 @@ public class BiomeManager : MonoBehaviour
                 profs.Add((inf.biome, inf));
         }
 
-        if (profs.Count == 0)
-        {
-            // nothing to paint
-            return;
-        }
+        if (profs.Count == 0) return;
 
-        // Build merged TerrainLayer list (unique)
         var mergedLayers = new List<TerrainLayer>();
         var layerToIndex = new Dictionary<TerrainLayer, int>();
 
@@ -284,39 +338,74 @@ public class BiomeManager : MonoBehaviour
 
         terrain.terrainData.terrainLayers = mergedLayers.ToArray();
 
-        // Prepare alphamap accumulation [height,width,layers] for convenience, then convert
         int amapW = terrain.terrainData.alphamapWidth;
         int amapH = terrain.terrainData.alphamapHeight;
         int layerCount = mergedLayers.Count;
         float[,,] alphaMaps = new float[amapH, amapW, layerCount];
 
-        // For each biome influence, add its weight distributed across that biome's layers equally
-        foreach (var pair in profs)
+        if (usePerPixelBlending)
         {
-            var def = pair.def;
-            var assign = pair.assign;
-            float infWeight = assign.blend; // normalized weight from GetBiomeInfluences
-
-            int defLayerCount = def.terrainLayers.Length;
+            Vector3 terrainPos = terrain.transform.position;
+            Vector3 terrainSize = terrain.terrainData.size;
 
             for (int y = 0; y < amapH; y++)
             {
                 for (int x = 0; x < amapW; x++)
                 {
-                    // distribute equally among the biome's layers (custom per-layer weights can be added later)
-                    float share = infWeight / defLayerCount;
-                    for (int li = 0; li < defLayerCount; li++)
+                    float normX = (float)x / (amapW - 1);
+                    float normY = (float)y / (amapH - 1);
+                    
+                    float worldX = terrainPos.x + normX * terrainSize.x;
+                    float worldZ = terrainPos.z + normY * terrainSize.z;
+                    
+                    var pixelInfluences = GetBiomeInfluencesAtWorldPos(new Vector2(worldX, worldZ), influenceCount);
+                    
+                    foreach (var inf in pixelInfluences)
                     {
-                        var layer = def.terrainLayers[li];
-                        if (layer == null) continue;
-                        int mergedIdx = layerToIndex[layer];
-                        alphaMaps[y, x, mergedIdx] += share;
+                        if (inf.biome == null || inf.biome.terrainLayers == null) continue;
+                        
+                        float infWeight = inf.blend;
+                        int defLayerCount = inf.biome.terrainLayers.Length;
+                        float share = infWeight / defLayerCount;
+                        
+                        for (int li = 0; li < defLayerCount; li++)
+                        {
+                            var layer = inf.biome.terrainLayers[li];
+                            if (layer == null) continue;
+                            if (!layerToIndex.ContainsKey(layer)) continue;
+                            int mergedIdx = layerToIndex[layer];
+                            alphaMaps[y, x, mergedIdx] += share;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach (var pair in profs)
+            {
+                var def = pair.def;
+                var assign = pair.assign;
+                float infWeight = assign.blend;
+                int defLayerCount = def.terrainLayers.Length;
+
+                for (int y = 0; y < amapH; y++)
+                {
+                    for (int x = 0; x < amapW; x++)
+                    {
+                        float share = infWeight / defLayerCount;
+                        for (int li = 0; li < defLayerCount; li++)
+                        {
+                            var layer = def.terrainLayers[li];
+                            if (layer == null) continue;
+                            int mergedIdx = layerToIndex[layer];
+                            alphaMaps[y, x, mergedIdx] += share;
+                        }
                     }
                 }
             }
         }
 
-        // Normalize alpha at each pixel
         for (int y = 0; y < amapH; y++)
         {
             for (int x = 0; x < amapW; x++)
@@ -325,7 +414,6 @@ public class BiomeManager : MonoBehaviour
                 for (int l = 0; l < layerCount; l++) sum += alphaMaps[y, x, l];
                 if (sum <= 0f)
                 {
-                    // fallback
                     alphaMaps[y, x, 0] = 1f;
                     continue;
                 }
@@ -333,7 +421,6 @@ public class BiomeManager : MonoBehaviour
             }
         }
 
-        // Convert to Unity expected dims [width, height, layers]
         float[,,] converted = new float[amapW, amapH, layerCount];
         for (int y = 0; y < amapH; y++)
             for (int x = 0; x < amapW; x++)
@@ -365,43 +452,65 @@ public class BiomeManager : MonoBehaviour
         int heightmapHeight = terrain.terrainData.heightmapResolution;
         float[,] heights = terrain.terrainData.GetHeights(0, 0, heightmapWidth, heightmapHeight);
 
+        Vector3 terrainPos = terrain.transform.position;
+        Vector3 terrainSize = terrain.terrainData.size;
+
         for (int y = 0; y < heightmapHeight; y++)
         {
             for (int x = 0; x < heightmapWidth; x++)
             {
                 float originalHeight = heights[y, x];
+                
+                float normX = (float)x / (heightmapWidth - 1);
+                float normY = (float)y / (heightmapHeight - 1);
+                
+                float worldX = terrainPos.x + normX * terrainSize.x;
+                float worldZ = terrainPos.z + normY * terrainSize.z;
+                
+                var pixelInfluences = usePerPixelBlending 
+                    ? GetBiomeInfluencesAtWorldPos(new Vector2(worldX, worldZ), influenceCount)
+                    : influences;
+
                 float modifiedHeight = originalHeight;
                 float totalWeight = 0f;
                 float accumulatedHeight = 0f;
+                float totalModifyWeight = 0f;
 
-                foreach (var inf in influences)
+                foreach (var inf in pixelInfluences)
                 {
-                    if (inf.biome == null || !inf.biome.modifyHeight) continue;
+                    if (inf.biome == null) continue;
 
-                    float biomeHeight = originalHeight;
-
-                    if (inf.biome.biomeNoiseAmplitude > 0f)
+                    if (inf.biome.modifyHeight)
                     {
-                        float worldX = (x + tileCoord.x * (heightmapWidth - 1)) * inf.biome.biomeNoiseScale;
-                        float worldY = (y + tileCoord.y * (heightmapHeight - 1)) * inf.biome.biomeNoiseScale;
-                        float noise = Mathf.PerlinNoise(worldX + seed, worldY + seed);
-                        biomeHeight += noise * inf.biome.biomeNoiseAmplitude;
+                        float biomeHeight = originalHeight;
+
+                        if (inf.biome.biomeNoiseAmplitude > 0f)
+                        {
+                            float worldNoiseX = worldX * inf.biome.biomeNoiseScale;
+                            float worldNoiseY = worldZ * inf.biome.biomeNoiseScale;
+                            float noise = Mathf.PerlinNoise(worldNoiseX + seed, worldNoiseY + seed);
+                            biomeHeight += noise * inf.biome.biomeNoiseAmplitude;
+                        }
+
+                        biomeHeight = biomeHeight * inf.biome.heightMultiplier + inf.biome.baseHeightOffset;
+
+                        if (inf.biome.heightCurve != null && inf.biome.heightCurve.keys.Length > 0)
+                        {
+                            biomeHeight = inf.biome.heightCurve.Evaluate(Mathf.Clamp01(biomeHeight));
+                        }
+
+                        accumulatedHeight += biomeHeight * inf.blend;
+                        totalModifyWeight += inf.blend;
                     }
-
-                    biomeHeight = biomeHeight * inf.biome.heightMultiplier + inf.biome.baseHeightOffset;
-
-                    if (inf.biome.heightCurve != null && inf.biome.heightCurve.keys.Length > 0)
-                    {
-                        biomeHeight = inf.biome.heightCurve.Evaluate(Mathf.Clamp01(biomeHeight));
-                    }
-
-                    accumulatedHeight += biomeHeight * inf.blend;
+                    
                     totalWeight += inf.blend;
                 }
 
-                if (totalWeight > 0f)
+                if (totalModifyWeight > 0f && totalWeight > 0f)
                 {
-                    modifiedHeight = accumulatedHeight / totalWeight;
+                    float blendedModifiedHeight = accumulatedHeight / totalModifyWeight;
+                    float modifyInfluence = totalModifyWeight / totalWeight;
+                    modifiedHeight = Mathf.Lerp(originalHeight, blendedModifiedHeight, modifyInfluence);
                 }
 
                 heights[y, x] = Mathf.Clamp01(modifiedHeight);
