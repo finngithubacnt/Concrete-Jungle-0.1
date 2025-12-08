@@ -145,7 +145,7 @@ Transform:
   m_GameObject: {fileID: 216667305}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -657.94745, y: 20.354523, z: 253.79698}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -164,13 +164,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileSize: 512
-  worldExtentInTiles: 1
-  centerCount: 5
-  worldSeed: 1337
-  borderNoiseScale: 0.86
-  borderNoiseAmplitudeInTiles: 0.64
+  worldExtentInTiles: 51
+  centerCount: 48
+  worldSeed: 3096
+  borderNoiseScale: 0.12
+  borderNoiseAmplitudeInTiles: 8
+  useMultiOctaveNoise: 1
+  borderNoiseOctaves: 2
+  borderNoiseLacunarity: 2.5
+  borderNoisePersistence: 0.4
+  biomeBlendWidth: 1
+  useConnectedRegions: 1
   usePerPixelBlending: 1
   neighborLookups: 15
+  alignTexturesAcrossTiles: 1
+  showDebugGizmos: 1
+  showBorderDebug: 1
+  debugGridSize: 51
   biomeDefinitions:
   - {fileID: 11400000, guid: 8f36e11351161654eb46d46f2d0fef11, type: 2}
   - {fileID: 11400000, guid: 27087637e9bd2cf4bb57e82cc94c7e97, type: 2}

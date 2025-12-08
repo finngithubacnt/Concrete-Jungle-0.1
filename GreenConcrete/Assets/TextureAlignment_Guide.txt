@@ -1,0 +1,230 @@
+╔══════════════════════════════════════════════════════════════╗
+║         TERRAIN TEXTURE ALIGNMENT SYSTEM - GUIDE             ║
+╚══════════════════════════════════════════════════════════════╝
+
+OVERVIEW
+--------
+The texture alignment system ensures that terrain textures seamlessly
+connect across tile boundaries by calculating proper texture offsets
+for each tile based on its world position.
+
+
+THE PROBLEM IT SOLVES
+----------------------
+
+WITHOUT Texture Alignment:
+  Each terrain tile uses the same texture UV mapping (0,0 to 1,1)
+  → Textures don't line up at tile boundaries
+  → Visible seams where patterns don't match
+  → Grass direction changes between tiles
+  → Brick/stone patterns misaligned
+  → Overall disconnected appearance
+
+WITH Texture Alignment:
+  Each tile's texture offset is calculated from world position
+  → Textures appear continuous across tiles
+  → Patterns flow naturally between tiles
+  → No visible seams or breaks
+  → Looks like one seamless terrain
+
+
+HOW IT WORKS
+------------
+
+For each terrain tile at position (tileX, tileY):
+
+1. Calculate world space position in texture coordinates:
+   worldOffsetX = (tileX * terrainSize) / textureSize.x
+   worldOffsetY = (tileY * terrainSize) / textureSize.y
+
+2. Extract fractional part (wrap around):
+   fractionalX = worldOffsetX - floor(worldOffsetX)
+   fractionalY = worldOffsetY - floor(worldOffsetY)
+
+3. Apply negative offset to align:
+   tileOffset.x = originalOffset.x - fractionalX
+   tileOffset.y = originalOffset.y - fractionalY
+
+Result: Each tile's texture appears in the correct "phase" to
+        match its neighbors perfectly.
+
+
+EXAMPLE
+-------
+
+Imagine a brick texture with tileSize = (2, 2) meters:
+
+Tile at (0, 0): offset = (0.0, 0.0)  ← Starting position
+Tile at (1, 0): offset = (-256, 0.0)  ← Shifted to align with left tile
+Tile at (0, 1): offset = (0.0, -256)  ← Shifted to align with bottom tile
+Tile at (1, 1): offset = (-256, -256) ← Aligned with both neighbors
+
+The brick pattern now flows continuously across all tiles!
+
+
+CONFIGURATION
+-------------
+
+Enable/Disable:
+  Select BiomeManager GameObject
+  → Find "Texture Alignment" section
+  → Toggle "Align Textures Across Tiles"
+  
+  ON (default):  Seamless texture transitions
+  OFF:           Original behavior (may show seams)
+
+
+REQUIREMENTS
+------------
+
+For best results:
+  1. Use tileable/seamless textures
+     → Textures should tile without visible seams
+     
+  2. Consistent tile sizes
+     → All terrain tiles should be the same size
+     
+  3. Appropriate texture scale
+     → Texture tileSize in TerrainLayer should look good
+     → Too small = repetitive, too large = stretched
+
+
+TECHNICAL DETAILS
+-----------------
+
+Per-Tile Layer Copies:
+  The system creates a unique TerrainLayer instance for each tile
+  → Original assets are not modified
+  → Each copy has adjusted tileOffset values
+  → All other properties (texture, size, etc.) remain the same
+
+Memory Impact:
+  Minimal - Only TerrainLayer metadata is duplicated
+  → Textures themselves are still shared (not duplicated)
+  → ~1KB per layer per tile
+  → Example: 9 tiles × 3 layers = 27 layer instances ≈ 27KB
+
+Performance Impact:
+  Negligible - Calculation happens once per tile on creation
+  → No runtime overhead
+  → No additional GPU cost
+  → Terrain rendering is unchanged
+
+
+TROUBLESHOOTING
+---------------
+
+"Textures still don't match at borders"
+  → Check that textures are properly tileable
+  → Verify all tiles have the same terrainSize
+  → Ensure texture tileSize is consistent across tiles
+  → Try adjusting the texture tileSize in the TerrainLayer asset
+
+"Textures look stretched or distorted"
+  → This is unrelated to alignment
+  → Adjust the "Tile Size" property in your TerrainLayer assets
+  → Larger values = less repetition, smaller = more tiling
+
+"Some biomes align but others don't"
+  → Each biome's TerrainLayers are aligned independently
+  → If two biomes use different textures, they may still
+    have a visible transition (but within each biome, tiles
+    will align correctly)
+
+
+BEST PRACTICES
+--------------
+
+1. Use High-Quality Tileable Textures
+   → Seamless textures work best
+   → Test tiling in an image editor first
+
+2. Consistent Texture Scales
+   → Keep tileSize similar across different biomes
+   → Example: All grass textures at 4×4 meters
+
+3. Test With Debug View
+   → Enable "Show Debug Gizmos" in BiomeManager
+   → Select biomeManager to see tile boundaries
+   → Verify textures line up at gizmo edges
+
+4. Combine With Per-Pixel Blending
+   → Enable "Use Per Pixel Blending" for best results
+   → Smooth biome transitions + aligned textures = perfection
+
+
+COMPARISON
+----------
+
+Before (Without Alignment):
+  Tile A: Grass pointing up    ↑↑↑|
+  Tile B: Grass pointing left  ←←←| ← Visible seam!
+  
+After (With Alignment):
+  Tile A: Grass pointing up    ↑↑↑|
+  Tile B: Grass pointing up    ↑↑↑| ← Seamless!
+
+
+WHEN TO DISABLE
+---------------
+
+You might want to disable texture alignment if:
+  
+  × Using very large, non-repeating textures (splat maps)
+  × Intentionally want varied texture appearance per tile
+  × Custom terrain shader with its own alignment logic
+  × Debugging texture issues and want original behavior
+
+
+RELATED SETTINGS
+----------------
+
+This feature works best with:
+  • Use Per Pixel Blending: ON
+    → Smooth texture transitions within tiles
+    
+  • Biome Blend Width: 6-10 tiles
+    → Natural transitions between biomes
+    
+  • Use Connected Regions: ON
+    → Larger, more coherent biome areas
+
+
+IMPLEMENTATION DETAILS
+----------------------
+
+Modified Methods:
+  • ApplyBiomeEffects()
+    → Now creates aligned TerrainLayer copies per tile
+    
+  • CreateAlignedTerrainLayer()
+    → New helper method that calculates proper offsets
+
+Parameters Copied:
+  ✓ diffuseTexture
+  ✓ normalMapTexture
+  ✓ maskMapTexture
+  ✓ tileSize
+  ✓ specular
+  ✓ metallic
+  ✓ smoothness
+  ✓ normalScale
+  ✓ diffuseRemapMin/Max
+  ✓ maskMapRemapMin/Max
+  ✓ smoothnessSource
+  ✓ tileOffset (ADJUSTED for alignment)
+
+
+SUMMARY
+-------
+
+The texture alignment system makes your terrain look like one
+continuous surface instead of a patchwork of tiles. It's:
+
+  ✓ Automatic - Works with any tileable texture
+  ✓ Efficient - Minimal memory and performance cost
+  ✓ Seamless - No visible tile boundaries
+  ✓ Configurable - Can be toggled on/off
+  ✓ Compatible - Works with all other biome features
+
+Enable it once and enjoy perfectly aligned terrain textures!

@@ -1,0 +1,207 @@
+╔══════════════════════════════════════════════════════════════╗
+║          IMPROVED BIOME BORDER SYSTEM - GUIDE                ║
+╚══════════════════════════════════════════════════════════════╝
+
+OVERVIEW
+--------
+The biome system has been enhanced with the following improvements:
+
+✓ Multi-octave fractal noise for natural, organic borders
+✓ Connected region generation using Poisson-disk distribution
+✓ Adjustable blend width for smooth transitions
+✓ Better visual coherence between biomes
+
+
+NEW FEATURES
+------------
+
+1. MULTI-OCTAVE NOISE
+   Instead of simple Perlin noise, the system now uses layered
+   fractal noise for more natural, detailed borders.
+
+   Settings:
+   - Use Multi Octave Noise: Enable/disable fractal noise
+   - Border Noise Octaves: Number of noise layers (1-6)
+     * 1 = simple noise (fast, less detail)
+     * 3 = good balance (recommended)
+     * 6 = maximum detail (slower)
+   
+   - Border Noise Lacunarity: Frequency multiplier (1.5-3)
+     * Lower = smoother features
+     * Higher = more chaotic
+     * Default: 2.0
+   
+   - Border Noise Persistence: Amplitude multiplier (0.3-0.7)
+     * Lower = less detail influence
+     * Higher = more prominent details
+     * Default: 0.5
+
+
+2. CONNECTED REGIONS
+   Biome centers are now distributed with minimum spacing to
+   create more connected, natural-looking regions.
+
+   Settings:
+   - Use Connected Regions: Enable Poisson-disk distribution
+     * ON = evenly spaced centers, connected regions
+     * OFF = random placement (old behavior)
+
+
+3. BIOME BLEND WIDTH
+   Control how smoothly biomes transition into each other.
+
+   Settings:
+   - Biome Blend Width: Transition zone size in tiles (1-20)
+     * 1-3 = sharp borders
+     * 5-10 = natural transitions (recommended)
+     * 15-20 = very gradual, painterly blends
+
+
+RECOMMENDED CONFIGURATIONS
+---------------------------
+
+FOR NATURAL LANDSCAPES:
+  Border Noise Octaves: 3
+  Border Noise Lacunarity: 2.0
+  Border Noise Persistence: 0.5
+  Border Noise Scale: 0.05 - 0.1
+  Border Noise Amplitude: 3 - 8 tiles
+  Biome Blend Width: 6 - 10 tiles
+  Use Connected Regions: ON
+  Use Multi Octave Noise: ON
+
+FOR STYLIZED/GAME-Y BIOMES:
+  Border Noise Octaves: 2
+  Border Noise Lacunarity: 2.5
+  Border Noise Persistence: 0.4
+  Border Noise Scale: 0.1 - 0.15
+  Border Noise Amplitude: 5 - 12 tiles
+  Biome Blend Width: 4 - 6 tiles
+  Use Connected Regions: ON
+  Use Multi Octave Noise: ON
+
+FOR SHARP, DISTINCT BIOMES:
+  Border Noise Octaves: 1
+  Border Noise Lacunarity: 2.0
+  Border Noise Persistence: 0.5
+  Border Noise Scale: 0.15
+  Border Noise Amplitude: 2 - 4 tiles
+  Biome Blend Width: 2 - 4 tiles
+  Use Connected Regions: ON
+  Use Multi Octave Noise: OFF
+
+FOR MAXIMUM PERFORMANCE:
+  Use Per Pixel Blending: OFF
+  Use Multi Octave Noise: OFF
+  Border Noise Octaves: 1
+  Neighbor Lookups: 2
+
+
+TUNING TIPS
+-----------
+
+If borders look TOO RANDOM/CHAOTIC:
+  → Reduce Border Noise Amplitude
+  → Reduce Border Noise Octaves
+  → Reduce Border Noise Lacunarity
+  → Increase Biome Blend Width
+
+If borders look TOO SMOOTH/BORING:
+  → Increase Border Noise Amplitude
+  → Increase Border Noise Octaves
+  → Decrease Biome Blend Width
+  → Increase Border Noise Scale
+
+If biomes feel DISCONNECTED:
+  → Enable Use Connected Regions
+  → Reduce Center Count
+  → Increase Biome Blend Width
+
+If transitions are TOO ABRUPT:
+  → Increase Biome Blend Width
+  → Enable Use Per Pixel Blending
+  → Increase Neighbor Lookups
+
+If performance is SLOW:
+  → Disable Use Per Pixel Blending
+  → Reduce Border Noise Octaves
+  → Reduce Neighbor Lookups
+  → Disable Use Multi Octave Noise
+
+
+TECHNICAL DETAILS
+-----------------
+
+Multi-Octave Noise Algorithm:
+  The system layers multiple noise functions at different
+  frequencies and amplitudes. Each octave adds finer detail.
+  
+  Formula:
+  total = 0
+  frequency = base_scale
+  amplitude = 1.0
+  
+  for each octave:
+    total += noise(x * frequency, y * frequency) * amplitude
+    amplitude *= persistence
+    frequency *= lacunarity
+  
+  result = total / sum_of_amplitudes
+
+Connected Regions:
+  Uses Poisson-disk sampling to ensure minimum distance
+  between biome centers, preventing clustering and creating
+  more even distribution.
+
+
+PERFORMANCE NOTES
+-----------------
+
+Multi-octave noise is more expensive than simple noise:
+  - 1 octave: ~1.0x cost
+  - 3 octaves: ~3.0x cost
+  - 6 octaves: ~6.0x cost
+
+Per-pixel blending is very expensive:
+  - Samples biome influences for every alphamap pixel
+  - Disable for mobile or large terrains
+  - Alternative: Use tile-based blending only
+
+
+CHANGELOG
+---------
+
+NEW PARAMETERS:
+  • useMultiOctaveNoise
+  • borderNoiseOctaves
+  • borderNoiseLacunarity
+  • borderNoisePersistence
+  • biomeBlendWidth
+  • useConnectedRegions
+
+NEW METHODS:
+  • GetMultiOctaveNoise() - Fractal noise generator
+  • GenerateConnectedRegions() - Poisson-disk distribution
+  • IsValidCenterPosition() - Spacing validation
+
+MODIFIED METHODS:
+  • GetBiomeForTile() - Uses new noise system
+  • GetBiomeInfluences() - Uses new noise system
+  • GetBiomeInfluencesAtWorldPos() - Uses new noise system
+  • GenerateCenters() - Supports both modes
+
+
+QUICK START
+-----------
+
+1. Select your BiomeManager GameObject in the scene
+2. In the Inspector, find "Advanced Border Control" section
+3. Enable "Use Multi Octave Noise"
+4. Enable "Use Connected Regions"
+5. Set "Biome Blend Width" to 8
+6. Right-click BiomeManager component → "Regenerate Biome Centers"
+7. Enter Play mode to see the improved borders!
+
+
+For best results, experiment with the settings while in Play mode
+to see real-time changes to your biome borders.

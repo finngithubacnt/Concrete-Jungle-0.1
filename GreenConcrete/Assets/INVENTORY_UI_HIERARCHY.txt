@@ -1,0 +1,314 @@
+╔══════════════════════════════════════════════════════════════╗
+║         INVENTORY UI HIERARCHY - VISUAL REFERENCE            ║
+╚══════════════════════════════════════════════════════════════╝
+
+This shows exactly what the Setup Wizard creates:
+
+
+SCENE HIERARCHY
+===============
+
+Player
+├── Main Camera
+└── [PlayerInventory component]
+
+InventoryCanvas                           [Canvas, CanvasScaler, GraphicRaycaster]
+├── DragHandler                          [InventoryDragHandler]
+├── InventoryPanel                       [Image, InventoryUIManager]
+│   ├── MainGrid                        [InventoryGridUI]
+│   │   └── GridContainer              [RectTransform]
+│   │       ├── GridCell (0,0)        [Image] ← Created at runtime
+│   │       ├── GridCell (1,0)        [Image]
+│   │       ├── GridCell (2,0)        [Image]
+│   │       └── ... (60 cells total)
+│   │
+│   └── BackpackGrid                   [InventoryGridUI] (Initially hidden)
+│       └── GridContainer              [RectTransform]
+│           ├── GridCell (0,0)        [Image] ← Created at runtime
+│           └── ... (48 cells total)
+│
+└── TooltipPanel                        [Image, InventoryTooltip] (Initially hidden)
+    ├── NameText                       [TextMeshProUGUI]
+    ├── DescriptionText                [TextMeshProUGUI]
+    └── StatsText                      [TextMeshProUGUI]
+
+
+PREFABS CREATED
+===============
+
+/Assets/Prefabs/Inventory/GridCell.prefab
+  GridCell                               [Image]
+    • Size: 50x50
+    • Color: Semi-transparent gray
+    • Used as template for grid cells
+
+/Assets/Prefabs/Inventory/InventoryItemUI.prefab
+  InventoryItemUI                        [RectTransform, CanvasGroup, InventoryItemUI]
+  ├── Background                        [Image]
+  ├── Icon                              [Image]
+  └── StackText                         [TextMeshProUGUI]
+
+
+COMPONENT REFERENCE
+===================
+
+InventoryCanvas
+  Components:
+    • Canvas (Overlay mode)
+    • CanvasScaler (1920x1080 reference)
+    • GraphicRaycaster
+
+InventoryPanel
+  Components:
+    • Image (dark semi-transparent background)
+    • InventoryUIManager
+        - inventoryPanel: self reference
+        - mainGridUI: MainGrid component
+        - backpackGridUI: BackpackGrid component
+        - toggleInventoryKey: Tab
+
+MainGrid / BackpackGrid
+  Components:
+    • InventoryGridUI
+        - gridContainer: child GridContainer
+        - cellSize: 50
+        - cellSpacing: 2
+        - cellPrefab: GridCell prefab
+        - itemPrefab: InventoryItemUI prefab
+        - normalCellColor: gray
+        - highlightCellColor: green
+        - invalidCellColor: red
+
+TooltipPanel
+  Components:
+    • Image (dark background)
+    • InventoryTooltip
+        - tooltipPanel: self reference
+        - itemNameText: NameText component
+        - descriptionText: DescriptionText component
+        - statsText: StatsText component
+
+Player
+  Components:
+    • PlayerInventory
+        - inventoryWidth: 10
+        - inventoryHeight: 6
+        - quickSlotCount: 4
+        - hasWeaponSlot: true
+        - hasArmorSlot: true
+        - hasBackpackSlot: true
+
+
+LAYOUT POSITIONING
+==================
+
+InventoryPanel
+  Position: Center of screen
+  Size: 1200 x 800 pixels
+  Anchor: Center-Center
+
+MainGrid
+  Position: Left side of panel, 50px from edge
+  Anchor: Bottom-Left to Top-Left
+  Auto-sized based on grid dimensions
+  Calculated: (10 * 50) + (9 * 2) = 518 pixels wide
+             (6 * 50) + (5 * 2) = 310 pixels tall
+
+BackpackGrid
+  Position: Right side of panel, 50px from edge
+  Anchor: Bottom-Right to Top-Right
+  Auto-sized based on grid dimensions
+  Calculated: (6 * 50) + (5 * 2) = 310 pixels wide
+             (8 * 50) + (7 * 2) = 414 pixels tall
+
+TooltipPanel
+  Position: Follows mouse cursor
+  Size: 300 x 200 pixels
+  Anchored to top-left, moves dynamically
+
+
+GRID CALCULATIONS
+=================
+
+Main Inventory Grid:
+  Columns: 10
+  Rows: 6
+  Total Cells: 60
+  Cell Size: 50x50 pixels
+  Spacing: 2 pixels
+  
+  Width = (columns × cellSize) + ((columns - 1) × spacing)
+        = (10 × 50) + (9 × 2)
+        = 500 + 18
+        = 518 pixels
+  
+  Height = (rows × cellSize) + ((rows - 1) × spacing)
+         = (6 × 50) + (5 × 2)
+         = 300 + 10
+         = 310 pixels
+
+Backpack Grid:
+  Columns: 6
+  Rows: 8
+  Total Cells: 48
+  Calculated Width: 310 pixels
+  Calculated Height: 414 pixels
+
+
+RUNTIME BEHAVIOR
+================
+
+At Start:
+  1. InventoryPanel is hidden (SetActive = false)
+  2. BackpackGrid is hidden (SetActive = false)
+  3. TooltipPanel is hidden (SetActive = false)
+  4. Grid cells are created dynamically
+
+When Tab is Pressed:
+  1. InventoryPanel becomes visible
+  2. Cursor unlocks and becomes visible
+  3. Grid cells are displayed
+  4. Items in inventory are spawned
+
+When Item is Dragged:
+  1. Item becomes semi-transparent (alpha 0.6)
+  2. Grid cells highlight (green if valid, red if invalid)
+  3. Item follows mouse cursor
+
+When Item is Dropped:
+  1. If valid position: Item placed at grid location
+  2. If invalid: Item returns to original position
+  3. Grid cells return to normal color
+  4. Item becomes fully opaque
+
+When Mouse Hovers Item:
+  1. TooltipPanel appears near cursor
+  2. Tooltip shows item name, description, stats
+  3. Tooltip auto-positions to stay on screen
+
+When Backpack Equipped:
+  1. BackpackGrid becomes visible
+  2. Grid size set to backpack's containerWidth/Height
+  3. Items can be placed in backpack grid
+
+
+COLOR CODING
+============
+
+Grid Cells:
+  Normal:     rgba(0.2, 0.2, 0.2, 0.8)  → Dark gray
+  Valid:      rgba(0.3, 0.5, 0.3, 0.8)  → Green
+  Invalid:    rgba(0.5, 0.2, 0.2, 0.8)  → Red
+
+Panel Backgrounds:
+  Inventory:  rgba(0.1, 0.1, 0.1, 0.95) → Almost black
+  Tooltip:    rgba(0.05, 0.05, 0.05, 0.95) → Very dark
+
+Item UI:
+  Background: rgba(0.9, 0.9, 0.9, 0.9)  → Light gray
+  Dragging:   rgba(1.0, 1.0, 1.0, 0.6)  → Semi-transparent
+
+
+Z-ORDER / SORTING
+=================
+
+Canvas Sort Order: 100 (appears above other UI)
+
+Within Canvas:
+  1. InventoryPanel (bottom layer)
+  2. Grid cells
+  3. Items
+  4. Dragged item (highest - via sibling index)
+  5. TooltipPanel (on top of everything)
+
+
+ANCHORS EXPLAINED
+=================
+
+InventoryPanel:
+  Anchor: Center (0.5, 0.5) to Center (0.5, 0.5)
+  → Stays centered as screen resizes
+
+MainGrid:
+  Anchor: Bottom-Left (0, 0) to Top-Left (0, 1)
+  → Sticks to left edge of panel
+
+BackpackGrid:
+  Anchor: Bottom-Right (1, 0) to Top-Right (1, 1)
+  → Sticks to right edge of panel
+
+GridContainer:
+  Anchor: Top-Left (0, 1) to Top-Left (0, 1)
+  → Grid grows downward from top
+
+TooltipPanel:
+  Anchor: Bottom-Left (0, 0) to Bottom-Left (0, 0)
+  → Position calculated from mouse
+
+
+VISUAL LAYOUT
+=============
+
+┌─────────────────────────────────────────────────────┐
+│              INVENTORY PANEL (1200x800)             │
+│  ┌──────────────────┐        ┌──────────────────┐  │
+│  │   MAIN GRID      │        │  BACKPACK GRID   │  │
+│  │   (10x6)         │        │  (6x8)           │  │
+│  │                  │        │  [When equipped] │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  │  ▢▢▢▢▢▢▢▢▢▢      │        │  ▢▢▢▢▢▢          │  │
+│  └──────────────────┘        │  ▢▢▢▢▢▢          │  │
+│                               │  ▢▢▢▢▢▢          │  │
+│                               └──────────────────┘  │
+└─────────────────────────────────────────────────────┘
+
+             ┌─────────────────┐
+             │ TOOLTIP         │  ← Follows cursor
+             │ Item Name       │
+             │ Description...  │
+             │ Weight: 1.5kg   │
+             └─────────────────┘
+
+
+ITEM PLACEMENT EXAMPLE
+======================
+
+Grid with 4x2 Rifle:
+
+  0  1  2  3  4  5  6  7  8  9
+┌──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
+│  │  │▓▓│▓▓│▓▓│▓▓│  │  │  │  │ 0  ← Rifle occupies
+├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤      cells (2,0) to (5,1)
+│  │  │▓▓│▓▓│▓▓│▓▓│  │  │  │  │ 1
+├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤
+│  │  │  │  │  │  │  │  │  │  │ 2
+├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤
+│  │  │  │  │  │  │  │  │  │  │ 3
+├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤
+│  │  │  │  │  │  │  │  │  │  │ 4
+├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤
+│  │  │  │  │  │  │  │  │  │  │ 5
+└──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘
+
+When rotated (becomes 2x4):
+  Can't fit at same position!
+  Must find 2-wide by 4-tall space
+
+
+SUMMARY
+=======
+
+The Setup Wizard creates:
+  ✓ Complete UI hierarchy
+  ✓ All necessary components
+  ✓ Proper anchoring and sizing
+  ✓ Two prefabs for runtime instantiation
+  ✓ Color-coded visual feedback
+  ✓ Responsive layout
+
+Everything is pre-configured and ready to use!
+Just run the wizard and start testing!

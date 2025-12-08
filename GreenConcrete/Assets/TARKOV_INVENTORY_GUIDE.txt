@@ -1,0 +1,490 @@
+╔══════════════════════════════════════════════════════════════╗
+║         TARKOV-STYLE INVENTORY SYSTEM - COMPLETE GUIDE       ║
+╚══════════════════════════════════════════════════════════════╝
+
+OVERVIEW
+--------
+A fully functional grid-based inventory system inspired by Escape from
+Tarkov, featuring:
+
+✓ Tetris-style grid placement
+✓ Items with different sizes (1x1, 2x3, 4x2, etc.)
+✓ Item rotation (R key while dragging)
+✓ Stackable items (ammo, consumables)
+✓ Container items (backpacks, cases)
+✓ Drag and drop functionality
+✓ Visual feedback and tooltips
+✓ Equipment slots (weapon, armor, backpack)
+✓ Quick slots for hotbar items
+✓ Weight calculation
+
+
+CORE COMPONENTS
+---------------
+
+1. ItemDefinition (ScriptableObject)
+   → Defines item properties: size, weight, icon, category
+   → Create via: Assets → Create → Inventory → Item Definition
+
+2. InventoryItem (Class)
+   → Runtime instance of an item
+   → Tracks stack count, rotation state, container contents
+
+3. InventoryGrid (Class)
+   → Grid data structure for item placement
+   → Handles placement validation, collision detection
+
+4. PlayerInventory (MonoBehaviour)
+   → Player's main inventory manager
+   → Manages main grid, equipment slots, quick slots
+
+5. UI Components
+   → InventoryGridUI: Displays grid visually
+   → InventoryItemUI: Individual item visual representation
+   → InventoryUIManager: Controls opening/closing inventory
+   → InventoryTooltip: Shows item information on hover
+
+
+SETUP INSTRUCTIONS
+------------------
+
+STEP 1: Create UI Canvas
+-------------------------
+1. Right-click in Hierarchy → UI → Canvas
+2. Set Canvas Scaler → UI Scale Mode → "Scale With Screen Size"
+3. Reference Resolution: 1920 x 1080
+
+STEP 2: Create Inventory Panel
+-------------------------------
+1. Create: Canvas → Panel (name it "InventoryPanel")
+2. Set anchors to center
+3. Set size to 1200 x 800 (or desired size)
+4. Add Background image (semi-transparent dark color)
+
+STEP 3: Create Grid Container
+------------------------------
+1. Create: InventoryPanel → Empty GameObject (name "GridContainer")
+2. Add RectTransform
+3. Set anchors to top-left
+4. Position at (50, -50) with pivot (0, 1)
+
+STEP 4: Create Cell Prefab
+---------------------------
+1. Create: UI → Image (name "GridCell")
+2. Set size: 50 x 50
+3. Set color: semi-transparent gray (0.2, 0.2, 0.2, 0.8)
+4. Save as Prefab in /Assets/Prefabs/Inventory/GridCell
+
+STEP 5: Create Item UI Prefab
+------------------------------
+1. Create: UI → Image (name "InventoryItemUI")
+2. Add CanvasGroup component
+3. Add InventoryItemUI script component
+4. Structure:
+   InventoryItemUI (root)
+   ├─ Background (Image - white with alpha 0.9)
+   ├─ Icon (Image - for item sprite)
+   └─ StackText (TextMeshProUGUI - bottom right corner)
+
+5. Set StackText:
+   - Font Size: 14
+   - Alignment: Bottom Right
+   - Color: White with black outline
+
+6. Save as Prefab in /Assets/Prefabs/Inventory/InventoryItemUI
+
+7. Link references in InventoryItemUI script:
+   - Icon Image → Icon
+   - Stack Text → StackText
+   - Background Image → Background
+
+STEP 6: Create Tooltip Panel
+-----------------------------
+1. Create: Canvas → Panel (name "TooltipPanel")
+2. Set anchors to top-left
+3. Structure:
+   TooltipPanel
+   ├─ NameText (TextMeshProUGUI - bold, size 18)
+   ├─ Icon (Image - 64x64)
+   ├─ DescriptionText (TextMeshProUGUI - size 14)
+   └─ StatsText (TextMeshProUGUI - size 12, monospace)
+
+4. Add InventoryTooltip script to TooltipPanel
+5. Link all text and image references
+
+STEP 7: Setup Main Components
+------------------------------
+1. Add InventoryGridUI script to GridContainer:
+   - Cell Size: 50
+   - Cell Spacing: 2
+   - Assign Cell Prefab
+   - Assign Item Prefab
+
+2. Add InventoryUIManager to InventoryPanel:
+   - Assign InventoryPanel reference
+   - Assign Main Grid UI reference
+   - Toggle Key: Tab
+
+3. Add InventoryDragHandler to Canvas (empty GameObject)
+
+4. Create Player GameObject (if not exists)
+5. Add PlayerInventory script to Player:
+   - Inventory Width: 10
+   - Inventory Height: 6
+   - Quick Slot Count: 4
+   - Enable equipment slots as needed
+
+STEP 8: Create Item Definitions
+--------------------------------
+1. Right-click in Project → Create → Inventory → Item Definition
+
+2. Example: Rifle
+   - Name: "AK-47"
+   - Width: 4
+   - Height: 2
+   - Can Rotate: true
+   - Category: Weapon
+   - Weight: 3.5
+   - Assign icon sprite
+
+3. Example: Ammo
+   - Name: "7.62x39 Ammo"
+   - Width: 1
+   - Height: 1
+   - Is Stackable: true
+   - Max Stack Size: 60
+   - Category: Ammo
+   - Weight: 0.01
+
+4. Example: Backpack
+   - Name: "Tactical Backpack"
+   - Width: 4
+   - Height: 5
+   - Is Container: true
+   - Container Width: 6
+   - Container Height: 8
+   - Category: Backpack
+
+5. Example: Medkit
+   - Name: "First Aid Kit"
+   - Width: 2
+   - Height: 2
+   - Is Stackable: false
+   - Category: Medical
+   - Weight: 0.3
+
+
+CONTROLS
+--------
+
+Tab          → Open/Close Inventory
+Left Mouse   → Drag Item
+R (dragging) → Rotate Item
+Hover        → Show Tooltip
+Right Click  → Quick Use/Equip (optional - implement as needed)
+
+F1           → Add test items (if InventoryTestHelper attached)
+F2           → Clear inventory (if InventoryTestHelper attached)
+
+
+FEATURES IN DETAIL
+------------------
+
+1. GRID-BASED PLACEMENT
+   - Items occupy multiple cells based on their size
+   - Collision detection prevents overlapping
+   - Visual feedback shows valid/invalid placement
+
+2. ITEM ROTATION
+   - Press R while dragging to rotate items 90°
+   - 2x4 rifle becomes 4x2 when rotated
+   - Only works if item.canRotate = true
+
+3. STACKING
+   - Stackable items (ammo, consumables) combine automatically
+   - Stack count displayed in bottom-right corner
+   - Max stack size defined per item
+
+4. CONTAINERS
+   - Backpacks, cases can hold other items
+   - Nested inventory grids
+   - Weight calculation includes container contents
+   - Separate UI panel for backpack grid
+
+5. DRAG AND DROP
+   - Smooth dragging with visual feedback
+   - Cells highlight green (valid) or red (invalid)
+   - Snaps to grid on drop
+   - Returns to original position if invalid
+
+6. TOOLTIPS
+   - Hover over items to see details
+   - Shows: Name, Description, Size, Weight, Value
+   - Auto-positions to stay on screen
+
+7. EQUIPMENT SLOTS
+   - Weapon slot (filters weapon category)
+   - Armor slot (filters armor category)
+   - Backpack slot (enables extra storage)
+
+8. WEIGHT SYSTEM
+   - Total weight calculated dynamically
+   - Includes equipped items and container contents
+   - Access via: PlayerInventory.Instance.GetTotalWeight()
+
+
+USING THE SYSTEM IN CODE
+-------------------------
+
+Add Item to Inventory:
+```csharp
+ItemDefinition rifleDefinition = // your rifle ScriptableObject
+InventoryItem rifle = new InventoryItem(rifleDefinition);
+PlayerInventory.Instance.AddItem(rifle);
+```
+
+Add Stackable Item:
+```csharp
+InventoryItem ammo = new InventoryItem(ammoDefinition, 30);
+PlayerInventory.Instance.AddItem(ammo);
+```
+
+Remove Item:
+```csharp
+PlayerInventory.Instance.RemoveItem(item);
+```
+
+Check if Item Fits:
+```csharp
+InventoryItem bigWeapon = new InventoryItem(weaponDef);
+Vector2Int? position = PlayerInventory.Instance.mainGrid.FindSpaceForItem(bigWeapon);
+if (position.HasValue)
+{
+    Debug.Log("Item fits at: " + position.Value);
+}
+else
+{
+    Debug.Log("No space for item!");
+}
+```
+
+Equip Weapon:
+```csharp
+PlayerInventory.Instance.EquipWeapon(weaponItem);
+```
+
+Listen to Inventory Changes:
+```csharp
+PlayerInventory.Instance.onInventoryChanged += () => {
+    Debug.Log("Inventory changed!");
+    UpdateUI();
+};
+```
+
+
+CUSTOMIZATION OPTIONS
+---------------------
+
+Grid Colors:
+  Edit InventoryGridUI:
+  - normalCellColor → Default cell appearance
+  - highlightCellColor → Valid placement
+  - invalidCellColor → Invalid placement
+
+Grid Size:
+  Edit PlayerInventory:
+  - inventoryWidth → Number of columns
+  - inventoryHeight → Number of rows
+
+Cell Size:
+  Edit InventoryGridUI:
+  - cellSize → Size in pixels
+  - cellSpacing → Gap between cells
+
+Visual Style:
+  - Modify prefabs for custom appearance
+  - Change colors, borders, shadows
+  - Add animations to drag/drop
+
+
+ADVANCED FEATURES TO ADD
+-------------------------
+
+1. Item Splitting
+   - Right-click stackable items
+   - Slider to choose split amount
+   - Create two separate stacks
+
+2. Quick Transfer
+   - Ctrl+Click to quick-move items
+   - Auto-find available space
+
+3. Item Comparison
+   - Shift+Click to compare weapons/armor
+   - Side-by-side stats display
+
+4. Search/Filter
+   - Search bar to find items by name
+   - Category filters (weapons, meds, etc.)
+
+5. Item Durability
+   - Add durability field to ItemDefinition
+   - Visual indicator (color, bar)
+
+6. Context Menus
+   - Right-click for item actions
+   - Use, Equip, Drop, Examine
+
+7. Sound Effects
+   - Pickup sound
+   - Drop sound
+   - Invalid placement sound
+   - UI open/close sounds
+
+8. Animations
+   - Item fade in/out
+   - Drag smooth interpolation
+   - Grid cell pulse on highlight
+
+
+TROUBLESHOOTING
+---------------
+
+"Items don't drag"
+  → Check EventSystem exists in scene
+  → Verify InventoryItemUI has CanvasGroup
+  → Ensure Canvas has GraphicRaycaster
+
+"Grid doesn't show"
+  → Check GridContainer has correct RectTransform
+  → Verify Cell Prefab is assigned
+  → Make sure Initialize() is called in Start()
+
+"Tooltip stays on screen"
+  → Check InventoryTooltip.Instance exists
+  → Verify OnPointerExit is being called
+  → Add CanvasGroup to item UI
+
+"Items overlap"
+  → Check InventoryGrid.CanPlaceItem() logic
+  → Verify item size is set correctly
+  → Ensure RemoveItem() is called before PlaceItem()
+
+"Can't rotate items"
+  → Set canRotate = true in ItemDefinition
+  → Press R while actively dragging
+  → Check item has width ≠ height
+
+"Backpack grid not showing"
+  → Create second InventoryGridUI for backpack
+  → Assign to InventoryUIManager.backpackGridUI
+  → Ensure backpack item has containerGrid initialized
+
+
+PERFORMANCE TIPS
+----------------
+
+1. Object Pooling
+   - Pool item UI elements instead of Destroy/Instantiate
+   - Reuse cell GameObjects
+
+2. Caching
+   - Cache frequently accessed components
+   - Store grid positions instead of recalculating
+
+3. Lazy Updates
+   - Only refresh UI when inventory actually changes
+   - Don't update every frame
+
+4. Limit Tooltips
+   - Add small delay before showing tooltip
+   - Hide immediately on pointer exit
+
+
+FILE STRUCTURE
+--------------
+
+/Assets/Scripts/Inventory/
+  ItemDefinition.cs          → Item data (ScriptableObject)
+  InventoryItem.cs           → Runtime item instance
+  InventoryGrid.cs           → Grid logic and placement
+  PlayerInventory.cs         → Player inventory manager
+  InventoryTestHelper.cs     → Testing utilities
+  
+  /UI/
+    InventoryGridUI.cs       → Grid visual display
+    InventoryItemUI.cs       → Item visual + drag/drop
+    InventoryDragHandler.cs  → Drag state manager
+    InventoryTooltip.cs      → Tooltip display
+    InventoryUIManager.cs    → Main UI controller
+
+/Assets/Prefabs/Inventory/
+  GridCell.prefab            → Individual grid cell
+  InventoryItemUI.prefab     → Item display element
+
+/Assets/ItemDefinitions/
+  (Your created item ScriptableObjects)
+
+
+EXAMPLE ITEMS TO CREATE
+------------------------
+
+Weapons (4x2):
+  - AK-47
+  - M4A1
+  - Shotgun
+
+Pistols (2x1):
+  - Glock
+  - Desert Eagle
+
+Ammo (1x1, stackable 60):
+  - 5.56 NATO
+  - 7.62x39
+  - 9mm
+
+Medical (1x1 or 2x2):
+  - Bandage (1x1, stackable 5)
+  - Medkit (2x2)
+  - Painkiller (1x1, stackable 3)
+
+Food (1x1, stackable 3):
+  - Energy Drink
+  - MRE
+  - Water Bottle
+
+Containers:
+  - Small Pouch (2x2, holds 3x3)
+  - Backpack (4x5, holds 6x8)
+  - Tactical Rig (3x4, holds 4x2 each pocket)
+
+Armor (3x3):
+  - Light Vest
+  - Heavy Plate Carrier
+
+
+NEXT STEPS
+----------
+
+1. Create your UI layout following setup instructions
+2. Create item definition assets for your game
+3. Add PlayerInventory to your player GameObject
+4. Create test items with InventoryTestHelper
+5. Test drag, drop, rotate functionality
+6. Customize visual style to match your game
+7. Add advanced features as needed
+
+
+CONGRATULATIONS! 🎉
+-------------------
+You now have a fully functional Tarkov-style inventory system!
+The foundation is solid and ready for your game-specific features.
+
+Key takeaways:
+  ✓ Grid-based Tetris-style placement
+  ✓ Items with different sizes and rotation
+  ✓ Containers within containers
+  ✓ Professional drag-and-drop UI
+  ✓ Extensible and customizable
+
+Happy developing!

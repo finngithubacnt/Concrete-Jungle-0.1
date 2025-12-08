@@ -1,0 +1,192 @@
+╔══════════════════════════════════════════════════════════════╗
+║         SOLUTION: FIX DISCONNECTED BIOME BORDERS             ║
+╚══════════════════════════════════════════════════════════════╝
+
+THE PROBLEM
+-----------
+Your biome borders looked messy and disconnected because:
+
+1. Biome radii were WAY too small - All biomes had radiusInTiles = 1 
+2. With 18 biome centers spread across your world, biomes were tiny dots
+3. The blend width (8 tiles) was actually LARGER than the biomes themselves!
+4. This caused constant overlapping and chaotic transitions
+
+
+THE SOLUTION - QUICK FIX (DO THIS NOW!)
+----------------------------------------
+
+In Unity's top menu, go to:
+>>> Tools → Quick Fix: Update All Biome Settings <<<
+
+Click "Yes, Fix It"
+
+This will automatically:
+  ✓ Set all biome radii to 15 tiles (proper size)
+  ✓ Configure BiomeManager with optimal settings
+  ✓ Regenerate biome centers
+
+Then ENTER PLAY MODE to see the fixed biome borders!
+
+
+MANUAL FIX (Alternative)
+-------------------------
+
+Option A: Use the Radius Fixer Tool
+1. Go to Tools → Fix Biome Radii
+2. Set "New Radius" to 15-20 tiles
+3. Click "Fix All Biome Radii"
+4. Select your BiomeManager GameObject
+5. Click "Regenerate Biome Centers" button
+6. Enter Play mode
+
+Option B: Fix Each Biome Manually
+1. In Project window, go to /Assets/layers/
+2. Select each BiomeDefinition asset (Forest, GrassLands, City, etc.)
+3. In Inspector, change "Radius In Tiles" from 1 to 15
+4. Repeat for all biomes
+5. Select BiomeManager in Hierarchy
+6. Right-click component → "Regenerate Biome Centers"
+7. Enter Play mode
+
+
+WHAT WAS WRONG?
+---------------
+
+BEFORE (BAD):
+  Biome Radius: 1 tile
+  World Extent: 10 tiles (20 tile wide world)
+  Center Count: 18 biomes
+  Result: Tiny biomes, constant overlapping, messy borders
+
+AFTER (GOOD):
+  Biome Radius: 15 tiles
+  World Extent: 10 tiles (20 tile wide world)  
+  Center Count: 18 biomes
+  Result: Proper-sized biomes, smooth transitions, connected regions
+
+
+EXPECTED RESULTS AFTER FIX
+---------------------------
+
+You should see:
+  ✅ Smooth transitions between biomes (no hard edges)
+  ✅ Connected regions - biomes form coherent areas
+  ✅ Natural-looking borders - organic, flowing boundaries
+  ✅ Proper blending - textures blend smoothly across tiles
+  ✅ Stable biomes - clear biome zones with transition areas
+
+
+ADDITIONAL TOOLS AVAILABLE
+---------------------------
+
+BiomeManager Inspector Now Has Preset Buttons:
+  • Natural Landscape - Best for realistic worlds
+  • Stylized - Game-y, artistic look
+  • Sharp Borders - Clear, distinct biomes  
+  • Performance - Optimized settings
+
+Debug Visualization:
+  • Show Debug Gizmos - See biome centers and radii
+  • Show Border Debug - Visualize transition zones
+  • Yellow wireframes = blend zones
+  • Colored cubes = biome dominance
+
+
+FINE-TUNING AFTER FIX
+---------------------
+
+If Biomes Are Too Large:
+  → Reduce "Radius In Tiles" to 10-12
+  → Increase "Center Count" to 25-30
+
+If Biomes Are Too Small:
+  → Increase "Radius In Tiles" to 18-20
+  → Reduce "Center Count" to 12-15
+
+If Transitions Are Too Abrupt:
+  → Increase "Biome Blend Width" to 10-12
+  → Increase "Neighbor Lookups" to 4-5
+  → Ensure "Use Per Pixel Blending" is ON
+
+If Transitions Are Too Gradual:
+  → Decrease "Biome Blend Width" to 4-6
+  → Reduce "Border Noise Amplitude" to 3-4
+
+
+WHY RADIUS MATTERS
+------------------
+
+The biome radius controls how large each biome region is:
+
+  Too Small (1-5 tiles):  Biomes are tiny dots, constant blending
+  Too Large (30+ tiles):  Few transitions, monotonous world
+  Just Right (10-20):     Clear biome zones with smooth transitions
+
+Recommended Formula:
+  World Extent × 2 / √(Center Count) ≈ Minimum Radius
+
+  Your setup: 10 × 2 / √18 = 4.7 tiles minimum
+  So use: 10-20 tiles for good coverage
+
+
+TROUBLESHOOTING
+---------------
+
+"Biomes still look disconnected"
+  → Ensure "Use Connected Regions" is enabled in BiomeManager
+  → Run: Tools → Quick Fix: Reset Biome Centers Only
+  → Check that biome definitions have terrain layers assigned
+
+"Textures don't blend"
+  → Ensure "Use Per Pixel Blending" is ON in BiomeManager
+  → Verify terrain layers are assigned in BiomeDefinition assets
+  → Check that biomes have different textures
+
+"Performance is slow"
+  → Disable "Use Per Pixel Blending"
+  → Reduce "Border Noise Octaves" to 1-2
+  → Reduce "Neighbor Lookups" to 2
+  → Or click the "Performance" preset button
+
+"Changes don't appear"
+  → Always regenerate biome centers after changing settings
+  → Exit and re-enter Play mode
+  → Check Console for any errors
+
+
+QUICK SUMMARY
+-------------
+
+The core issue: biome radius = 1 tile (way too small!)
+
+The fix:
+  1. Run: Tools → Quick Fix: Update All Biome Settings
+  2. Enter Play mode
+  3. Enjoy smooth, connected biome borders! 🎉
+
+That's it! Your biomes will now look natural and connected.
+
+
+FILES CREATED FOR YOU
+---------------------
+
+Scripts:
+  • /Assets/Scripts/Editor/BiomeManagerEditor.cs
+    Custom inspector with preset buttons
+
+  • /Assets/Scripts/Editor/BiomeRadiusFixer.cs
+    Tool to fix all biome radii at once
+
+  • /Assets/Scripts/Editor/QuickFixBiomes.cs
+    One-click fix for all biome settings
+
+Documentation:
+  • /Assets/BiomeSystem_ImprovedBorders_Guide.txt
+    Technical guide for all new features
+
+  • /Assets/SOLUTION_FixBiomeBorders.txt
+    This file - the solution to your problem
+
+Core System:
+  • /Assets/BiomeManager.cs (UPDATED)
+    Enhanced with multi-octave noise and connected regions
