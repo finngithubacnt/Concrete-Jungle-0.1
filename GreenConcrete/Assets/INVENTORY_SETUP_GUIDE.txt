@@ -1,0 +1,234 @@
+═══════════════════════════════════════════════════════════════
+    TARKOV INVENTORY SYSTEM - SETUP GUIDE
+═══════════════════════════════════════════════════════════════
+
+✅ SCRIPTS CREATED - NO ERRORS!
+
+The inventory system is ready. Now follow these steps:
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: ADD COMPONENTS TO PLAYER
+═════════════════════════════════
+
+1. Select the "Player" GameObject in scene "testing2"
+2. Click "Add Component"
+3. Add "PlayerInventory"
+4. Add "InventoryTester"
+
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: CREATE ITEM DEFINITIONS
+════════════════════════════════
+
+Create 3 test items:
+
+1. Health Potion:
+   → Right-click in Project → Create → Inventory → Item Definition
+   → Name it "HealthPotion"
+   → Set:
+      • Item Name: "Health Potion"
+      • Description: "Restores 50 HP"
+      • Width: 1, Height: 1
+      • Is Stackable: ✓
+      • Max Stack Size: 5
+      • Weight: 0.2
+
+2. Rifle:
+   → Create → Inventory → Item Definition
+   → Name it "Rifle"
+   → Set:
+      • Item Name: "AK-47"
+      • Description: "Assault rifle"
+      • Width: 4, Height: 2
+      • Can Rotate: ✓
+      • Weight: 3.5
+
+3. Backpack:
+   → Create → Inventory → Item Definition
+   → Name it "Backpack"
+   → Set:
+      • Item Name: "Tactical Backpack"
+      • Description: "Storage container"
+      • Width: 4, Height: 5
+      • Is Container: ✓
+      • Container Width: 6
+      • Container Height: 8
+      • Weight: 1.2
+
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: ASSIGN ITEMS TO TESTER
+═══════════════════════════════
+
+1. Select Player GameObject
+2. Find "InventoryTester" component
+3. Drag your 3 ItemDefinition assets to:
+   • Test Health Potion → HealthPotion
+   • Test Rifle → Rifle
+   • Test Backpack → Backpack
+
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: CREATE ITEM BEHAVIORS (OPTIONAL)
+═════════════════════════════════════════
+
+To add behavior to items:
+
+1. Create a GameObject in scene (anywhere)
+2. Add component: "HealthPotionBehavior" or "WeaponBehavior"
+3. Configure the behavior settings
+4. Drag this GameObject to Project to make it a prefab
+5. Select your ItemDefinition (e.g., HealthPotion)
+6. Drag the prefab to "Behavior Script" field
+7. Now when you use the item, the behavior runs!
+
+
+═══════════════════════════════════════════════════════════════
+
+STEP 5: TEST IT!
+════════════════
+
+1. Press Play ▶
+2. Press F1 → Adds test items to inventory
+3. Press F2 → Uses first item in inventory
+4. Press F3 → Equips first weapon found
+
+Check the Console for messages!
+
+
+═══════════════════════════════════════════════════════════════
+
+HOW TO USE IN YOUR CODE
+════════════════════════
+
+Add Item:
+```csharp
+ItemDefinition myItem = // your item asset
+InventoryItem item = new InventoryItem(myItem);
+PlayerInventory.Instance.AddItem(item);
+```
+
+Use Item:
+```csharp
+PlayerInventory.Instance.UseItem(item);
+// This only works if player HAS the item
+// Item's behavior script will run!
+```
+
+Check If Player Has Item:
+```csharp
+if (PlayerInventory.Instance.HasItemOfType(myItemDef))
+{
+    Debug.Log("Player has this item type!");
+}
+```
+
+Equip Weapon:
+```csharp
+PlayerInventory.Instance.EquipWeapon(weaponItem);
+```
+
+Get Total Weight:
+```csharp
+float weight = PlayerInventory.Instance.GetTotalWeight();
+Debug.Log($"Carrying {weight}kg");
+```
+
+
+═══════════════════════════════════════════════════════════════
+
+ITEM BEHAVIORS - HOW THEY WORK
+═══════════════════════════════
+
+1. Create a MonoBehaviour that implements IItemBehavior
+2. Implement these methods:
+   • OnUse(player) - Called when item is used
+   • OnEquip(player) - Called when equipped
+   • OnUnequip(player) - Called when unequipped
+   • CanUse(player) - Return true if usable
+
+3. Create a prefab with this behavior
+4. Assign it to ItemDefinition's "Behavior Script"
+
+Example: HealthPotionBehavior
+```csharp
+public class HealthPotionBehavior : MonoBehaviour, IItemBehavior
+{
+    public float healAmount = 50f;
+
+    public void OnUse(GameObject player)
+    {
+        // Heal player
+        Debug.Log($"Healed {healAmount}!");
+    }
+
+    public bool CanUse(GameObject player) => true;
+    public void OnEquip(GameObject player) { }
+    public void OnUnequip(GameObject player) { }
+}
+```
+
+The behavior ONLY runs if the player HAS the item!
+
+
+═══════════════════════════════════════════════════════════════
+
+FEATURES INCLUDED
+═════════════════
+
+✓ Grid-based inventory (10x6 default)
+✓ Different item sizes (1x1, 2x2, 4x2, etc.)
+✓ Item rotation (if item allows it)
+✓ Stackable items
+✓ Container items (backpacks hold items)
+✓ Equipment slots (weapon, armor, backpack)
+✓ Quick slots (4 hotbar slots)
+✓ Weight system
+✓ Auto-stacking
+✓ Auto-find space
+✓ Item behaviors (scripts run when used)
+✓ Behavior security (only works if player has item)
+✓ Events (onItemAdded, onItemRemoved, etc.)
+
+
+═══════════════════════════════════════════════════════════════
+
+CREATED FILES
+═════════════
+
+Core System:
+  /Assets/Scripts/Inventory/IItemBehavior.cs
+  /Assets/Scripts/Inventory/ItemDefinition.cs
+  /Assets/Scripts/Inventory/InventoryItem.cs
+  /Assets/Scripts/Inventory/InventoryGrid.cs
+  /Assets/Scripts/Inventory/PlayerInventory.cs
+  /Assets/Scripts/Inventory/InventoryTester.cs
+
+Example Behaviors:
+  /Assets/Scripts/Inventory/ItemBehaviors/HealthPotionBehavior.cs
+  /Assets/Scripts/Inventory/ItemBehaviors/WeaponBehavior.cs
+
+
+═══════════════════════════════════════════════════════════════
+
+NEXT STEPS
+══════════
+
+1. Add PlayerInventory to Player ✓
+2. Add InventoryTester to Player ✓
+3. Create 3 ItemDefinitions
+4. Assign items to tester
+5. Press Play and test with F1, F2, F3
+6. Create item behaviors as needed
+
+
+═══════════════════════════════════════════════════════════════
+
+That's it! The system is ready to use.
+The behavior scripts will ONLY run when the player has the item!
+
+═══════════════════════════════════════════════════════════════

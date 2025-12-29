@@ -1057,7 +1057,6 @@ GameObject:
   - component: {fileID: 8850858489020183148}
   - component: {fileID: 365231021538243749}
   - component: {fileID: 8850858489020183149}
-  - component: {fileID: 8850858489020183150}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1225,22 +1224,6 @@ MonoBehaviour:
   sprintSpeed: 10
   jumpForce: 7
   isGrounded: 0
---- !u!114 &8850858489020183150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4948432718594856470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e7ced46773c3ec4486f7cb4901c9ae0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testRifle: {fileID: 11400000, guid: 9caaed746b60187428d853e7c9e38db5, type: 2}
-  testAmmo: {fileID: 11400000, guid: 4ddd7cbc5dd8a9d4683a5714610d4f4e, type: 2}
-  testMedkit: {fileID: 11400000, guid: bc3ec3b4b7157054788bc2c846bd59a0, type: 2}
-  testBackpack: {fileID: 11400000, guid: c9bf4ed4be90cc84cbe6f322e50473c8, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
