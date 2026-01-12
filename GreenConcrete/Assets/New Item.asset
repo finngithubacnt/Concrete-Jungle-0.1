@@ -9,20 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deedde895e5c4e342ba81227f6bc0740, type: 3}
+  m_Script: {fileID: 11500000, guid: f9e8f04043abc4c43b3747850cb6f702, type: 3}
   m_Name: New Item
   m_EditorClassIdentifier: 
-  itemName: Rifle
+  itemName: BackPack
   description: 
-  icon: {fileID: 0}
-  width: 2
+  icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  width: 1
   height: 1
   canRotate: 1
   isStackable: 0
   maxStackSize: 1
-  isContainer: 0
-  containerWidth: 0
-  containerHeight: 0
-  weight: 5
+  weight: 0.5
   value: 100
-  category: 0
+  isContainer: 1
+  containerWidth: 5
+  containerHeight: 5
+  behaviorScript: {fileID: 0}

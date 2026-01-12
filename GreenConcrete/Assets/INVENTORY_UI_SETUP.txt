@@ -1,0 +1,360 @@
+╔══════════════════════════════════════════════════════════════╗
+║    INVENTORY UI SETUP - STEP BY STEP INSTRUCTIONS           ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ ALL SCRIPTS CREATED SUCCESSFULLY!
+
+The following scripts are now in your project:
+  • InventoryUIManager.cs      - Controls opening/closing inventory
+  • InventoryGridUI.cs          - Visual grid display
+  • InventoryItemUI.cs          - Individual item visuals
+  • InventoryDragHandler.cs     - Drag and drop functionality
+  • InventoryTooltip.cs         - Hover tooltips
+
+Now follow these steps to set up the visual UI:
+
+═══════════════════════════════════════════════════════════════
+STEP 1: CREATE THE INVENTORY PANEL
+═══════════════════════════════════════════════════════════════
+
+1. In Hierarchy, locate: Player/Main Camera/Canvas
+
+2. Right-click on Canvas → UI → Panel
+   - Name it: "InventoryPanel"
+
+3. Configure InventoryPanel:
+   - Set Anchors: Center (Alt+Shift+click center preset)
+   - Width: 1200
+   - Height: 800
+   - Background Color: Black with Alpha 200 (semi-transparent)
+
+4. Add Component to InventoryPanel:
+   - Add Script: InventoryUIManager
+   - DO NOT ASSIGN REFERENCES YET (we'll do this later)
+
+═══════════════════════════════════════════════════════════════
+STEP 2: CREATE THE GRID CONTAINER
+═══════════════════════════════════════════════════════════════
+
+1. Right-click InventoryPanel → Create Empty
+   - Name it: "GridContainer"
+
+2. Add Component: RectTransform (should already have one)
+
+3. Configure GridContainer RectTransform:
+   - Anchors: Top-Left (click top-left preset)
+   - Pivot: X=0, Y=1
+   - Pos X: 50
+   - Pos Y: -50
+   - Width: 520
+   - Height: 310
+
+4. Add Component to GridContainer:
+   - Add Script: InventoryGridUI
+   - Cell Size: 50
+   - Cell Spacing: 2
+   - DO NOT ASSIGN PREFABS YET
+
+═══════════════════════════════════════════════════════════════
+STEP 3: CREATE GRID CELL PREFAB
+═══════════════════════════════════════════════════════════════
+
+1. In Hierarchy, right-click → UI → Image
+   - Name it: "GridCell"
+
+2. Configure GridCell:
+   - Width: 50
+   - Height: 50
+   - Color: R=51, G=51, B=51, A=200 (dark gray)
+
+3. Drag GridCell from Hierarchy to /Assets/Prefabs/Inventory/ folder
+   - This creates the prefab
+
+4. Delete GridCell from Hierarchy (we only need the prefab)
+
+═══════════════════════════════════════════════════════════════
+STEP 4: CREATE ITEM UI PREFAB
+═══════════════════════════════════════════════════════════════
+
+1. In Hierarchy, right-click → UI → Image
+   - Name it: "InventoryItemUI"
+
+2. Add Component to InventoryItemUI:
+   - Add Component: Canvas Group
+   - Add Script: InventoryItemUI
+
+3. Configure InventoryItemUI root:
+   - Width: 50
+   - Height: 50
+   - Color: White (R=255, G=255, B=255, A=200)
+
+4. Create children:
+   a) Right-click InventoryItemUI → UI → Image
+      - Name: "Icon"
+      - Anchors: Stretch (fill parent)
+      - Left/Right/Top/Bottom: all 5 (for padding)
+      - Preserve Aspect: ✓ (checked)
+
+   b) Right-click InventoryItemUI → UI → Text - TextMeshPro
+      - Name: "StackText"
+      - Anchors: Bottom-Right
+      - Pivot: X=1, Y=0
+      - Pos X: -5
+      - Pos Y: 5
+      - Font Size: 14
+      - Color: White
+      - Alignment: Right + Bottom
+      - Add Outline (Component → Effect → Outline)
+
+5. Link references in InventoryItemUI component:
+   - Icon Image: drag "Icon" here
+   - Background Image: drag "InventoryItemUI" here
+   - Stack Text: drag "StackText" here
+
+6. Drag InventoryItemUI from Hierarchy to /Assets/Prefabs/Inventory/
+   - This creates the prefab
+
+7. Delete InventoryItemUI from Hierarchy
+
+═══════════════════════════════════════════════════════════════
+STEP 5: CREATE TOOLTIP PANEL
+═══════════════════════════════════════════════════════════════
+
+1. Right-click Canvas → UI → Panel
+   - Name it: "TooltipPanel"
+
+2. Configure TooltipPanel:
+   - Anchors: Top-Left
+   - Pivot: X=0, Y=1
+   - Width: 250
+   - Height: 150
+   - Background Color: Black with Alpha 230
+
+3. Add Component to TooltipPanel:
+   - Add Script: InventoryTooltip
+
+4. Create children for TooltipPanel:
+
+   a) Right-click TooltipPanel → UI → Text - TextMeshPro
+      - Name: "NameText"
+      - Anchors: Top (stretch horizontally)
+      - Height: 30
+      - Pos Y: -10
+      - Font Size: 18
+      - Font Style: Bold
+      - Color: White
+      - Alignment: Center + Middle
+
+   b) Right-click TooltipPanel → UI → Text - TextMeshPro
+      - Name: "DescriptionText"
+      - Anchors: Top (stretch)
+      - Pos Y: -45
+      - Height: 60
+      - Font Size: 12
+      - Color: Light Gray
+      - Alignment: Top + Left
+      - Wrapping: Enabled
+
+   c) Right-click TooltipPanel → UI → Text - TextMeshPro
+      - Name: "StatsText"
+      - Anchors: Bottom (stretch)
+      - Height: 50
+      - Pos Y: 10
+      - Font Size: 11
+      - Color: Yellow
+      - Alignment: Top + Left
+
+   d) Right-click TooltipPanel → UI → Image
+      - Name: "Icon"
+      - Width: 64
+      - Height: 64
+      - Anchors: Top-Left
+      - Pos X: 10
+      - Pos Y: -50
+      - Preserve Aspect: ✓
+
+5. Link references in TooltipPanel's InventoryTooltip component:
+   - Name Text: drag "NameText" here
+   - Description Text: drag "DescriptionText" here
+   - Stats Text: drag "StatsText" here
+   - Icon Image: drag "Icon" here
+   - Tooltip Panel: drag "TooltipPanel" itself here
+
+═══════════════════════════════════════════════════════════════
+STEP 6: CREATE DRAG HANDLER
+═══════════════════════════════════════════════════════════════
+
+1. Right-click Canvas → Create Empty
+   - Name it: "DragHandler"
+
+2. Add Component to DragHandler:
+   - Add Script: InventoryDragHandler
+
+═══════════════════════════════════════════════════════════════
+STEP 7: LINK ALL REFERENCES
+═══════════════════════════════════════════════════════════════
+
+1. Select InventoryPanel in Hierarchy
+
+2. In Inspector, find InventoryUIManager component:
+   - Inventory Panel: drag "InventoryPanel" here
+   - Main Grid UI: drag "GridContainer" here
+   - Toggle Key: Tab (should be default)
+
+3. Select GridContainer in Hierarchy
+
+4. In Inspector, find InventoryGridUI component:
+   - Cell Prefab: drag GridCell prefab from Assets/Prefabs/Inventory/
+   - Item Prefab: drag InventoryItemUI prefab from Assets/Prefabs/Inventory/
+
+═══════════════════════════════════════════════════════════════
+STEP 8: CONNECT TO PLAYER INVENTORY
+═══════════════════════════════════════════════════════════════
+
+1. Find your Player GameObject in Hierarchy
+
+2. Make sure it has PlayerInventory component
+   - If not, Add Component: PlayerInventory
+
+3. Configure PlayerInventory:
+   - Inventory Width: 10
+   - Inventory Height: 6
+   - Quick Slot Count: 4
+   - Has Weapon Slot: ✓
+   - Has Armor Slot: ✓
+   - Has Backpack Slot: ✓
+
+═══════════════════════════════════════════════════════════════
+STEP 9: CREATE TEST ITEMS
+═══════════════════════════════════════════════════════════════
+
+1. In Project window, right-click → Create → Inventory → Item Definition
+
+2. Create a test item (e.g., "Health Potion"):
+   - Item Name: "Health Potion"
+   - Description: "Restores health"
+   - Width: 1
+   - Height: 1
+   - Can Rotate: true
+   - Is Stackable: true
+   - Max Stack Size: 5
+   - Weight: 0.1
+   - Value: 50
+
+3. Create another item (e.g., "Rifle"):
+   - Item Name: "Assault Rifle"
+   - Description: "Powerful weapon"
+   - Width: 4
+   - Height: 2
+   - Can Rotate: true
+   - Is Stackable: false
+   - Weight: 3.5
+   - Value: 500
+
+4. Find your InventoryTester component (if it exists on a GameObject)
+   - Assign your test items to the slots
+
+═══════════════════════════════════════════════════════════════
+STEP 10: TEST THE INVENTORY
+═══════════════════════════════════════════════════════════════
+
+1. Make sure InventoryPanel is set to INACTIVE (unchecked in Inspector)
+   - This is important! It should start hidden
+
+2. Enter Play Mode
+
+3. Press Tab → Inventory should open!
+
+4. Press F1 → Test items are added
+
+5. Test drag and drop:
+   - Click and drag items
+   - Press R while dragging to rotate
+   - Hover over items to see tooltips
+
+6. Press Tab again → Inventory closes
+
+═══════════════════════════════════════════════════════════════
+CONTROLS
+═══════════════════════════════════════════════════════════════
+
+Tab          - Open/Close Inventory
+Left Mouse   - Drag items
+R (dragging) - Rotate items
+Hover        - Show tooltip
+
+F1           - Add test items (if InventoryTester exists)
+F2           - Use first item
+F3           - Equip first weapon
+
+═══════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+❌ "Inventory doesn't open when I press Tab"
+   → Check InventoryPanel is assigned in InventoryUIManager
+   → Make sure InventoryPanel starts INACTIVE (unchecked)
+   → Check Console for errors
+
+❌ "Grid doesn't show"
+   → Check Cell Prefab is assigned in InventoryGridUI
+   → Make sure GridContainer has InventoryGridUI component
+   → Call InitializeGrid in Start
+
+❌ "Items don't show"
+   → Check Item Prefab is assigned in InventoryGridUI
+   → Make sure items have icons assigned
+   → Verify InventoryItemUI has all references linked
+
+❌ "Can't drag items"
+   → Check DragHandler exists with InventoryDragHandler component
+   → Verify InventoryItemUI has CanvasGroup component
+   → Make sure Canvas has GraphicRaycaster
+
+❌ "Tooltips don't appear"
+   → Check TooltipPanel has InventoryTooltip component
+   → Verify all text references are linked
+   → Make sure TooltipPanel has a CanvasGroup
+
+═══════════════════════════════════════════════════════════════
+CUSTOMIZATION
+═══════════════════════════════════════════════════════════════
+
+Colors:
+  • Edit cell colors in InventoryGridUI component
+  • Normal Cell Color: Default appearance
+  • Highlight Cell Color: Valid placement (green)
+  • Invalid Cell Color: Invalid placement (red)
+
+Grid Size:
+  • Edit in PlayerInventory component
+  • Inventory Width: Number of columns
+  • Inventory Height: Number of rows
+
+Cell Size:
+  • Edit in InventoryGridUI component
+  • Cell Size: Size in pixels (default 50)
+  • Cell Spacing: Gap between cells (default 2)
+
+═══════════════════════════════════════════════════════════════
+🎉 CONGRATULATIONS!
+═══════════════════════════════════════════════════════════════
+
+Your Tarkov-style inventory system is now complete and functional!
+
+Features:
+  ✓ Grid-based Tetris-style placement
+  ✓ Drag and drop items
+  ✓ Rotate items (R key)
+  ✓ Tooltips on hover
+  ✓ Stackable items
+  ✓ Visual feedback
+
+Next steps:
+  • Add icons to your items
+  • Create more item definitions
+  • Customize the visual style
+  • Add sound effects
+  • Implement item behaviors
+
+Happy developing!
