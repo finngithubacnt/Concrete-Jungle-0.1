@@ -276,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1d8881ddc310c4cbf9b02e0d97bcf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDragging: 0
 --- !u!1 &313691608 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8509073288763056340, guid: 6fffc2aa8c2b3b942bec671dd1184571, type: 3}
@@ -294,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testHealthPotion: {fileID: 11400000, guid: 3804416c06fa3e64fb00cf84f547ab8e, type: 2}
-  testRifle: {fileID: 0}
+  testRifle: {fileID: 11400000, guid: 2ab6025ee0060874ea81f9b36cc24b54, type: 2}
   testBackpack: {fileID: 0}
 --- !u!114 &313691610
 MonoBehaviour:
@@ -1471,10 +1472,10 @@ PrefabInstance:
       addedObject: {fileID: 9125253}
     - targetCorrespondingSourceObject: {fileID: 5997362053338704003, guid: 6fffc2aa8c2b3b942bec671dd1184571, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 231929363}
+      addedObject: {fileID: 1330825355}
     - targetCorrespondingSourceObject: {fileID: 5997362053338704003, guid: 6fffc2aa8c2b3b942bec671dd1184571, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1330825355}
+      addedObject: {fileID: 231929363}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8509073288763056340, guid: 6fffc2aa8c2b3b942bec671dd1184571, type: 3}
       insertIndex: -1
@@ -1535,15 +1536,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444787051}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.000039793827}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9125253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -125.00006, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 520, y: 310}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1444787053
@@ -1563,8 +1564,8 @@ MonoBehaviour:
   cellPrefab: {fileID: 1098244611345176960, guid: e7c6a500e86e8f34eabd055cc107b919, type: 3}
   itemPrefab: {fileID: 8358335343260289634, guid: 1772a9af5efbf2844ac9ebe194838c6a, type: 3}
   normalCellColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.8}
-  highlightCellColor: {r: 0.2, g: 0.8, b: 0.2, a: 0.8}
-  invalidCellColor: {r: 0.8, g: 0.2, b: 0.2, a: 0.8}
+  highlightCellColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  invalidCellColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
 --- !u!1 &1495036550 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8416272007918961125, guid: 066a3caeff734404a9be54616b9973e1, type: 3}

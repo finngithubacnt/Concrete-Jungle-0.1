@@ -7,7 +7,7 @@ public class InventoryDragHandler : MonoBehaviour
     private InventoryItem draggedItem;
     private InventoryGridUI sourceGrid;
     private InventoryItemUI draggedItemUI;
-    private bool isDragging = false;
+    public bool isDragging = false;
 
     void Awake()
     {
@@ -31,6 +31,7 @@ public class InventoryDragHandler : MonoBehaviour
 
     public void StartDrag(InventoryItem item, InventoryGridUI grid, InventoryItemUI itemUI)
     {
+        Debug.Log("Started dragging item");
         draggedItem = item;
         sourceGrid = grid;
         draggedItemUI = itemUI;
