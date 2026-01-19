@@ -9,6 +9,9 @@ public class ItemDefinition : ScriptableObject
     public string description;
     public Sprite icon;
 
+    [Header("Item Type")]
+    public bool WeaponOrTool;
+
     [Header("Grid Size")]
     public int width = 1;
     public int height = 1;
