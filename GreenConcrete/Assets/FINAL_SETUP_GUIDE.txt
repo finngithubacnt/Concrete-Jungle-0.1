@@ -1,0 +1,276 @@
+╔══════════════════════════════════════════════════════════════╗
+║            INVENTORY DRAG SYSTEM - FINAL SETUP GUIDE         ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 SYSTEM STATUS: Ready to use (after 1 prefab fix!)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  CRITICAL: ONE THING YOU MUST DO FIRST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fix the InventoryItemUi prefab by adding an Image component:
+
+1. Double-click: /Assets/Prefabs/Inventory/InventoryItemUi.prefab
+
+2. Select ROOT "InventoryItemUi" GameObject
+
+3. Add Component → Image
+
+4. Configure Image:
+   • Raycast Target: ✅ CHECKED
+   • Color: White (Alpha: 200)
+
+5. Configure InventoryItemUI script references:
+   • Background Image: Drag "InventoryItemUi" (itself) here
+   • Icon Image: Drag child "Icon" here
+   • Stack Text: Drag child "StackText" here
+
+6. Save (Ctrl+S)
+
+Full details: PREFAB_FIX_INSTRUCTIONS.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ WHAT I'VE DONE FOR YOU:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ Refactored to self-contained drag system
+   • Each item handles its own dragging
+   • No more centralized InventoryDragHandler dependency
+   • Simpler, cleaner architecture
+
+2. ✅ Added extensive debugging
+   • Logs show exactly what's happening
+   • Easy to track drag events
+   • Helps diagnose issues
+
+3. ✅ Fixed canvas scale issues
+   • Dragging now respects canvas scaling
+   • More accurate mouse tracking
+
+4. ✅ Auto-detection for missing references
+   • Automatically finds Image component if not assigned
+   • Warnings if components are missing
+
+5. ✅ Created EventSystem in scene
+   • Required for UI input
+   • Already configured correctly
+
+6. ✅ Created comprehensive documentation
+   • Setup guides
+   • Architecture explanations
+   • Comparison documents
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 HOW TO USE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In Play Mode:
+
+1. Press TAB → Opens inventory
+
+2. Press F1 → Adds test items to inventory
+
+3. Click and hold an item → Start dragging
+
+4. Move mouse → Item follows cursor
+   • Cells highlight GREEN if valid placement
+   • Cells highlight RED if invalid
+
+5. Press R while dragging → Rotate item
+   (only works on items with canRotate=true)
+
+6. Release mouse → Places item
+   • Snaps to grid position under cursor
+   • If invalid, finds alternate position
+   • If no space, returns to general inventory
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏗️  SCENE REQUIREMENTS (Already Set Up):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your scene has:
+
+✅ Canvas
+   ├─ Render Mode: Screen Space - Overlay ✓
+   ├─ GraphicRaycaster component ✓
+   └─ inventoryPanel
+        └─ GridContainer
+             ├─ InventoryGridUI script ✓
+             │    ├─ cellPrefab: assigned ✓
+             │    └─ itemPrefab: assigned ✓
+             └─ Items spawn here
+
+✅ EventSystem (at scene root)
+   ├─ EventSystem component ✓
+   └─ StandaloneInputModule component ✓
+
+✅ DragHandler (OPTIONAL - Can be removed)
+   └─ InventoryDragHandler.cs
+        → Not used anymore! System is self-contained now.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PREFAB REQUIREMENTS (NEEDS YOUR FIX):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/Assets/Prefabs/Inventory/InventoryItemUi.prefab needs:
+
+InventoryItemUi (ROOT)
+  ├─ ❌ Image component (YOU NEED TO ADD THIS!)
+  │    └─ raycastTarget = TRUE
+  │
+  ├─ ✅ RectTransform (already has)
+  ├─ ✅ CanvasGroup (auto-created by script)
+  ├─ ✅ InventoryItemUI script (already has)
+  │
+  └─ Children:
+       ├─ Icon (Image with raycastTarget=false)
+       └─ StackText (TextMeshProUGUI)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEM: Items don't respond to clicks
+
+CHECK:
+  1. Did you add Image to prefab root? (MOST COMMON!)
+  2. Is Image.raycastTarget = true?
+  3. Is EventSystem in scene?
+  4. Does Canvas have GraphicRaycaster?
+
+SOLUTION:
+  → Follow PREFAB_FIX_INSTRUCTIONS.txt
+
+────────────────────────────────────────────────────────────
+
+PROBLEM: Items drag but don't follow mouse accurately
+
+CHECK:
+  1. Canvas.renderMode = Screen Space - Overlay
+  2. Canvas scaling settings
+
+SOLUTION:
+  → System now uses canvas.scaleFactor automatically
+
+────────────────────────────────────────────────────────────
+
+PROBLEM: Items can't be placed anywhere
+
+CHECK:
+  1. Console for error messages
+  2. Grid data exists
+  3. Grid has space
+
+SOLUTION:
+  → Debug logs will show placement attempts
+
+────────────────────────────────────────────────────────────
+
+PROBLEM: Rotation doesn't work
+
+CHECK:
+  1. Item definition has canRotate = true
+  2. Pressing R while dragging (not before/after)
+
+SOLUTION:
+  → Only rotatable items can rotate
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 DEBUG OUTPUT YOU'LL SEE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When items are created:
+  "InventoryItemUI Awake on InventoryItemUi(Clone)"
+  "  Awake complete: backgroundImage=True, iconImage=True, stackText=True, canvas=True"
+  "SetItem: HealthPotion on InventoryItemUi(Clone)"
+  "  Background Image raycastTarget SET TO TRUE. Current value: True"
+
+When you start dragging:
+  "★★★ OnBeginDrag called on InventoryItemUi(Clone) ★★★"
+  "  Item: HealthPotion"
+  "  Removed item from grid"
+
+When you rotate:
+  "  Rotated item to 2x1"
+
+When you finish dragging:
+  "★ OnEndDrag called for HealthPotion"
+  "  Placed at (3, 2)"
+
+If backgroundImage is missing:
+  "  ERROR: backgroundImage is NULL! Cannot enable raycast target!"
+  → This means you need to fix the prefab!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION FILES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 PREFAB_FIX_INSTRUCTIONS.txt
+   → Step-by-step guide to fix the prefab
+   ⭐ READ THIS FIRST!
+
+📄 SELF_CONTAINED_DRAG_SYSTEM.txt
+   → Explains new architecture
+   → How the system works now
+
+📄 DRAG_SYSTEM_COMPARISON.txt
+   → Before vs After comparison
+   → Why this is better
+
+📄 DIAGNOSIS_COMPLETE.txt
+   → Root cause analysis
+   → Why items weren't detecting mouse
+
+📄 RAYCAST_TARGET_EXPLAINED.txt
+   → How Unity UI raycasting works
+   → Why Image component is needed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧹 OPTIONAL CLEANUP:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After testing, you can:
+
+1. Delete DragHandler GameObject from scene
+   Location: /Player/Main Camera/Canvas/DragHandler
+   → Not needed with new self-contained system
+
+2. Delete InventoryDragHandler.cs script
+   Location: /Assets/Scripts/Inventory/UI/InventoryDragHandler.cs
+   → Not referenced anymore
+
+3. Delete old documentation (optional)
+   • INVENTORY_UI_SETUP.txt
+   • INVENTORY_QUICK_START.txt
+   • INVENTORY_DRAG_FIX.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ FEATURES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Smooth drag and drop
+✅ Visual feedback (transparency, highlights)
+✅ Smart grid placement
+✅ Rotation support (R key)
+✅ Scale-aware dragging
+✅ Automatic fallback positioning
+✅ Grid highlighting (valid/invalid)
+✅ Tooltip on hover
+✅ Self-contained design
+✅ Extensive debugging
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 QUICK START (After Prefab Fix):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix prefab (PREFAB_FIX_INSTRUCTIONS.txt)
+2. Press Play
+3. Press Tab (open inventory)
+4. Press F1 (add items)
+5. Drag items around!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EVERYTHING IS READY - JUST FIX THE PREFAB AND START DRAGGING!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

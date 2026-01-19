@@ -1,0 +1,229 @@
+╔══════════════════════════════════════════════════════════════╗
+║      SELF-CONTAINED DRAG SYSTEM - ARCHITECTURE UPDATE       ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 WHAT CHANGED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I've refactored the inventory dragging system so each InventoryItemUI
+handles its own dragging independently. No more centralized drag handler!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OLD ARCHITECTURE (Centralized):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUI
+  ├─ OnBeginDrag() → Calls InventoryDragHandler.Instance.StartDrag()
+  ├─ OnDrag() → Calls InventoryDragHandler.Instance.UpdateDrag()
+  └─ OnEndDrag() → Calls InventoryDragHandler.Instance.EndDrag()
+
+InventoryDragHandler (Singleton)
+  ├─ Manages draggedItem
+  ├─ Manages isDragging state
+  ├─ Handles grid placement logic
+  └─ Handles rotation (R key)
+
+Problems:
+  ❌ Requires InventoryDragHandler GameObject in scene
+  ❌ Tight coupling between components
+  ❌ Single point of failure
+  ❌ Harder to debug (state spread across multiple objects)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NEW ARCHITECTURE (Self-Contained):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUI
+  ├─ OnBeginDrag() → Starts drag directly
+  ├─ OnDrag() → Updates position and highlights cells
+  ├─ OnEndDrag() → Places item in grid
+  ├─ Update() → Handles rotation (R key)
+  └─ All drag state contained within
+
+Benefits:
+  ✅ No singleton dependency
+  ✅ Each item is independent
+  ✅ Simpler to understand and debug
+  ✅ No extra GameObject needed in scene
+  ✅ Better encapsulation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW IT WORKS NOW:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DRAG START (OnBeginDrag)
+   ┌────────────────────────────────────────────┐
+   │ • Set isDragging = true                    │
+   │ • Store original position                  │
+   │ • Make item semi-transparent (alpha 0.6)   │
+   │ • Disable raycasts on item                 │
+   │ • Remove item from grid data               │
+   │ • Move to front (SetAsLastSibling)         │
+   └────────────────────────────────────────────┘
+
+2. DRAGGING (OnDrag)
+   ┌────────────────────────────────────────────┐
+   │ • Update item visual position              │
+   │ • Get grid position under mouse            │
+   │ • Check if item can be placed              │
+   │ • Highlight cells (green/red)              │
+   └────────────────────────────────────────────┘
+
+3. ROTATION (Update)
+   ┌────────────────────────────────────────────┐
+   │ • If R key pressed while dragging          │
+   │ • Rotate item data (swap width/height)     │
+   │ • Update visual size                       │
+   └────────────────────────────────────────────┘
+
+4. DRAG END (OnEndDrag)
+   ┌────────────────────────────────────────────┐
+   │ • Set isDragging = false                   │
+   │ • Make item fully opaque (alpha 1.0)       │
+   │ • Re-enable raycasts                       │
+   │ • Clear cell highlights                    │
+   │ • Try to place item at mouse position      │
+   │ • If placement fails:                      │
+   │   ├─ Find alternate position in grid       │
+   │   ├─ Or return to inventory                │
+   │   └─ Return item to original visual spot   │
+   │ • Trigger inventory refresh                │
+   └────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CODE CHANGES MADE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 InventoryItemUI.cs:
+
+ADDED:
+  • private Canvas canvas;                  // For scale-aware dragging
+  • private bool isDragging;                // Drag state
+  • public int cellSize = 50;               // Grid cell size
+  • public int cellSpacing = 2;             // Grid spacing
+  • void Update()                           // Rotation handling
+  • void RotateItem()                       // Rotation logic
+
+CHANGED:
+  • OnBeginDrag() - Now handles drag start directly
+  • OnDrag() - Now updates position and highlights
+  • OnEndDrag() - Now handles placement logic
+
+REMOVED DEPENDENCY:
+  ✗ No more InventoryDragHandler.Instance calls
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHAT YOU CAN DO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Remove InventoryDragHandler GameObject from scene (optional)
+   → It's no longer needed!
+
+✅ Delete InventoryDragHandler.cs script (optional)
+   → Not used anymore
+
+✅ Adjust drag behavior per item if needed:
+   → Each InventoryItemUI can have different cellSize/cellSpacing
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TESTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix the prefab first! (See PREFAB_FIX_INSTRUCTIONS.txt)
+   → Add Image component to root GameObject
+
+2. Enter Play Mode
+
+3. Press Tab → Open inventory
+
+4. Press F1 → Add items
+
+5. Click and drag an item → Should work!
+
+6. Press R while dragging → Item rotates
+
+7. Release → Item places in grid
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DEBUG OUTPUT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When dragging:
+  "★★★ OnBeginDrag called on InventoryItemUi(Clone) ★★★"
+  "  Item: HealthPotion"
+  "  Removed item from grid"
+
+When rotating:
+  "  Rotated item to 2x1"
+
+When placing:
+  "★ OnEndDrag called for HealthPotion"
+  "  Placed at (3, 2)"
+
+Or if placement fails:
+  "  Could not place, finding new spot"
+  "  Placed at alternate position (0, 0)"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY FEATURES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Scale-Aware Dragging
+   → Uses canvas.scaleFactor for accurate movement
+
+✅ Visual Feedback
+   → Semi-transparent while dragging
+   → Cells highlight green (valid) or red (invalid)
+
+✅ Smart Placement
+   → Places where you drop if valid
+   → Finds alternative spot if invalid
+   → Returns to inventory as last resort
+
+✅ Rotation Support
+   → Press R while dragging to rotate
+   → Only works on items with canRotate=true
+   → Visual size updates immediately
+
+✅ Grid Integration
+   → Removes item from grid on drag start
+   → Re-adds to grid on drag end
+   → Triggers inventory refresh automatically
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ADVANTAGES OF THIS APPROACH:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Modularity
+   Each item is a self-contained draggable unit
+
+2. Flexibility
+   Easy to customize drag behavior per item type
+
+3. Debugging
+   All drag state is in one place
+
+4. Performance
+   No singleton lookups or event routing
+
+5. Simplicity
+   Less code, fewer dependencies
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NEXT STEPS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix the prefab (PREFAB_FIX_INSTRUCTIONS.txt) ← CRITICAL!
+
+2. Test dragging in Play Mode
+
+3. Optional: Remove old InventoryDragHandler from scene
+
+4. Optional: Delete InventoryDragHandler.cs file
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The system is now cleaner, simpler, and more maintainable!
+Each item is responsible for its own dragging behavior.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

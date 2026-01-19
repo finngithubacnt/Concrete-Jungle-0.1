@@ -1,0 +1,151 @@
+╔══════════════════════════════════════════════════════════════╗
+║   CRITICAL FIX: InventoryItemUi Prefab Missing Image        ║
+╚══════════════════════════════════════════════════════════════╝
+
+🔴 ROOT CAUSE FOUND!
+
+The InventoryItemUi prefab is MISSING the Image component on the root
+GameObject! This is why items cannot be clicked or dragged.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMMEDIATE FIX - DO THIS NOW (5 MINUTES):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. In Project window, double-click:
+   /Assets/Prefabs/Inventory/InventoryItemUi.prefab
+
+2. This opens Prefab Edit Mode
+
+3. Select the ROOT "InventoryItemUi" GameObject in Hierarchy
+
+4. In Inspector, click "Add Component"
+
+5. Search for "Image" and add it
+
+6. Configure the Image component:
+   ┌─────────────────────────────────────┐
+   │ Image                               │
+   │ ├─ Source Image: [None]             │
+   │ ├─ Color: White (R=255 G=255 B=255) │
+   │ │          Alpha=200               │
+   │ ├─ Material: [None]                 │
+   │ └─ ☑ Raycast Target  ← CHECK THIS! │
+   └─────────────────────────────────────┘
+
+7. Still on ROOT, find "InventoryItemUI" script component
+
+8. Drag references:
+   - Background Image: drag "InventoryItemUi" (itself) here
+   - Icon Image: drag child "Icon" here
+   - Stack Text: drag child "StackText" here
+
+9. Still on ROOT, Add Component → "Canvas Group"
+
+10. Configure Canvas Group:
+   ┌─────────────────────────────────────┐
+   │ Canvas Group                        │
+   │ ├─ Alpha: 1                         │
+   │ ├─ ☑ Interactable                   │
+   │ └─ ☑ Block Raycasts                 │
+   └─────────────────────────────────────┘
+
+11. Now select CHILD "Icon" in Hierarchy
+
+12. Find its "Image" component
+
+13. Make sure:
+    └─ ☐ Raycast Target  ← UNCHECK THIS!
+
+14. Select CHILD "StackText"
+
+15. Find "TextMeshProUGUI" component
+
+16. Make sure:
+    └─ ☐ Raycast Target  ← UNCHECK THIS!
+
+17. Save prefab:
+    - Click "Save" button at top of Inspector
+    - OR press Ctrl+S
+    - OR File → Save
+
+18. Exit Prefab Mode (click "<" arrow at top of Hierarchy)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL PREFAB STRUCTURE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUi (ROOT)
+  Components:
+    ✅ RectTransform
+    ✅ Image (Raycast Target = ON) ← THIS IS THE KEY FIX!
+    ✅ Canvas Group
+    ✅ InventoryItemUI script
+       ├─ backgroundImage: → InventoryItemUi (itself)
+       ├─ iconImage: → Icon (child)
+       └─ stackText: → StackText (child)
+  
+  Children:
+    ├─ Icon
+    │    Components:
+    │      ├─ RectTransform
+    │      └─ Image (Raycast Target = OFF)
+    │
+    └─ StackText
+         Components:
+           ├─ RectTransform
+           └─ TextMeshProUGUI (Raycast Target = OFF)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHY THIS FIXES DRAGGING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before Fix:
+  Mouse Click → No Image on root → Nothing to detect click → No drag
+
+After Fix:
+  Mouse Click → Image catches it → InventoryItemUI.OnBeginDrag() called → Drag works!
+
+The Image component with raycastTarget=true is REQUIRED for UI event
+detection. Without it, Unity's event system cannot detect mouse input
+on that GameObject, even if it has IBeginDragHandler implemented!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AFTER FIXING, TEST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Enter Play Mode
+
+2. Press Tab → Open inventory
+
+3. Press F1 → Add test items
+
+4. Check Console - you should see:
+   "InventoryItemUI Awake on InventoryItemUi(Clone)"
+   "SetItem: [ItemName] on InventoryItemUi(Clone)"
+   "  Background Image raycastTarget SET TO TRUE"
+
+5. Click on an item → should see:
+   "★★★ OnBeginDrag called on InventoryItemUi(Clone) ★★★"
+
+6. Drag item → should follow mouse
+
+7. Release → should place in grid
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IF IT STILL DOESN'T WORK:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Check Console for messages - I've added extensive debugging
+
+2. Verify EventSystem exists in scene (should be at root level)
+
+3. Make sure Canvas has GraphicRaycaster component
+
+4. Try clicking anywhere on Canvas to test if UI is responsive
+
+5. Check if the item GameObject is actually being created:
+   - In Play Mode with inventory open
+   - Look in Hierarchy under GridContainer
+   - Should see InventoryItemUi(Clone) objects
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

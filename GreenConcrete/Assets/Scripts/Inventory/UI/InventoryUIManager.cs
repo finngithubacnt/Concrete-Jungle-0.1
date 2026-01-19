@@ -93,7 +93,14 @@ public class InventoryUIManager : MonoBehaviour
 
         if (mainGridUI != null && PlayerInventory.Instance != null)
         {
-            mainGridUI.RefreshGrid(PlayerInventory.Instance.mainGrid);
+            if (PlayerInventory.Instance.mainGrid != null)
+            {
+                mainGridUI.RefreshGrid(PlayerInventory.Instance.mainGrid);
+            }
+            else
+            {
+                Debug.Log("PlayerInventory.mainGrid is null!");
+            }
         }
 
         if (backpackGridUI != null && PlayerInventory.Instance != null && PlayerInventory.Instance.backpackSlot != null)

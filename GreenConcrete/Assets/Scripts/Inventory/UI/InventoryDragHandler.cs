@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryDragHandler : MonoBehaviour
@@ -11,6 +13,7 @@ public class InventoryDragHandler : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("InventoryDragHandler Awake");
         if (Instance == null)
         {
             Instance = this;
@@ -26,6 +29,13 @@ public class InventoryDragHandler : MonoBehaviour
         if (isDragging && Input.GetKeyDown(KeyCode.R))
         {
             RotateItem();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+      
+          //  Debug.Log("Left mouse button pressed");
+            // Optional: Handle key release if needed
         }
     }
 
@@ -46,6 +56,7 @@ public class InventoryDragHandler : MonoBehaviour
 
     public void UpdateDrag(Vector2 screenPosition)
     {
+        Debug.Log("Updating drag position");
         if (!isDragging || draggedItem == null || sourceGrid == null)
             return;
 

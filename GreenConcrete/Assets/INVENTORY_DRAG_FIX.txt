@@ -1,0 +1,235 @@
+╔══════════════════════════════════════════════════════════════╗
+║         INVENTORY DRAG & DROP - DEBUG & FIX GUIDE           ║
+╚══════════════════════════════════════════════════════════════╝
+
+🔍 ISSUES FOUND AND FIXED:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ ISSUE #1: NO EVENTSYSTEM (FIXED AUTOMATICALLY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problem:
+  ❌ EventSystem was missing from scene
+  ❌ UI events (clicks, drags) won't work without it
+
+Solution:
+  ✅ Created EventSystem GameObject in scene root
+  ✅ Added EventSystem component
+  ✅ Added StandaloneInputModule component
+
+Verify:
+  1. Look in Hierarchy for "EventSystem" at root level
+  2. Should have 2 components:
+     - EventSystem
+     - StandaloneInputModule
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ ISSUE #2: RAYCAST TARGET ON ICON (MANUAL FIX REQUIRED)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problem:
+  ❌ Icon image inside InventoryItemUI prefab blocks dragging
+  ❌ Icon's Raycast Target is DISABLED (should be disabled)
+  ❌ Background's Raycast Target might be DISABLED (needs to be enabled)
+
+CRITICAL FIX - DO THIS NOW:
+
+1. Open: /Assets/Prefabs/Inventory/InventoryItemUi.prefab
+
+2. Select ROOT "InventoryItemUi" GameObject:
+   → Check Image component
+   → ✅ ENABLE "Raycast Target" (check the box)
+   → This is the background - MUST receive raycasts for dragging!
+
+3. Select CHILD "Icon" GameObject:
+   → Check Image component
+   → ❌ DISABLE "Raycast Target" (uncheck the box)
+   → This prevents icon from blocking background
+
+4. Select CHILD "StackText" GameObject:
+   → Check TextMeshProUGUI component
+   → ❌ DISABLE "Raycast Target" (uncheck the box)
+
+5. Save the prefab (Ctrl+S or File → Save)
+
+Visual Checklist:
+  InventoryItemUi (ROOT)
+    └─ Image: Raycast Target ✅ CHECKED
+  ├─ Icon
+  │   └─ Image: Raycast Target ❌ UNCHECKED
+  └─ StackText
+      └─ TextMeshProUGUI: Raycast Target ❌ UNCHECKED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ ISSUE #3: GRID INITIALIZATION (FIXED IN CODE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problem:
+  ❌ Grid might not initialize properly on first open
+
+Solution:
+  ✅ Updated InventoryUIManager.cs to add null checks
+  ✅ Updated InventoryItemUI.cs to ensure raycast settings
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 ADDITIONAL CHECKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Canvas Component:
+   ✅ Must have GraphicRaycaster component
+   ✅ Render Mode: Screen Space - Overlay (recommended)
+
+2. InventoryItemUI Prefab:
+   ✅ Must have CanvasGroup component on root
+   ✅ Must have InventoryItemUI script on root
+   ✅ Background Image must have Raycast Target ENABLED
+
+3. DragHandler:
+   ✅ Must exist in scene
+   ✅ Must have InventoryDragHandler script
+   ✅ Should be child of Canvas (anywhere is fine)
+
+4. GridContainer:
+   ✅ Must have InventoryGridUI script
+   ✅ Cell Prefab must be assigned
+   ✅ Item Prefab must be assigned
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 TESTING PROCEDURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After applying the fixes:
+
+1. Save all changes
+2. Enter Play Mode
+3. Press Tab → Inventory should open
+4. Press F1 → Test items should appear in grid
+5. Try to click on an item:
+   - Item should become semi-transparent (alpha 0.6)
+   - Item should follow mouse cursor
+   - Grid cells should highlight green/red
+6. Press R while dragging → Item should rotate
+7. Release mouse → Item should snap to grid
+8. Hover over item → Tooltip should appear
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ IF DRAGGING STILL DOESN'T WORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Try these debugging steps:
+
+1. Check Console for errors:
+   → Window → General → Console
+   → Look for any red errors
+
+2. Verify EventSystem exists:
+   → Look in Hierarchy for "EventSystem"
+   → Should be at root level (not inside Canvas)
+
+3. Test Raycast Target:
+   → Select InventoryItemUi prefab
+   → Root object Image must have Raycast Target ✅
+
+4. Check CanvasGroup:
+   → InventoryItemUi prefab root
+   → Must have CanvasGroup component
+   → Alpha should be 1
+   → Interactable should be ✅
+   → Block Raycasts should be ✅
+
+5. Verify DragHandler Instance:
+   → In Play Mode, open Console
+   → Type: InventoryDragHandler.Instance
+   → Should not be null
+
+6. Check item creation:
+   → In Play Mode after pressing F1
+   → Look in GridContainer in Hierarchy
+   → Should see child objects (grid cells and items)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐛 COMMON ISSUES & SOLUTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Issue: "Items appear but I can't click them"
+Solution:
+  → Root Image Raycast Target must be ENABLED
+  → CanvasGroup must exist
+  → EventSystem must exist in scene
+
+Issue: "Nothing happens when I click"
+Solution:
+  → Check Console for errors
+  → Verify EventSystem exists
+  → Make sure Canvas has GraphicRaycaster
+
+Issue: "Items don't follow mouse"
+Solution:
+  → InventoryDragHandler must exist in scene
+  → Check OnDrag is being called (add Debug.Log)
+  → Verify CanvasGroup.blocksRaycasts = false during drag
+
+Issue: "Items snap back immediately"
+Solution:
+  → Grid is not finding valid position
+  → Check grid size matches inventory size
+  → Verify item Width/Height properties
+
+Issue: "Can't rotate items"
+Solution:
+  → Item must have canRotate = true in ItemDefinition
+  → Press R while actively dragging
+  → Check InventoryDragHandler is receiving input
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 FINAL CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Scene Hierarchy:
+  ☐ EventSystem exists at root
+  ☐ Canvas has GraphicRaycaster
+  ☐ inventoryPanel exists
+  ☐ GridContainer has InventoryGridUI
+  ☐ DragHandler has InventoryDragHandler
+  ☐ InventoryUIManager exists
+
+Prefabs:
+  ☐ GridCell.prefab exists
+  ☐ InventoryItemUi.prefab exists
+  ☐ InventoryItemUi root has CanvasGroup
+  ☐ InventoryItemUi root has InventoryItemUI script
+  ☐ InventoryItemUi root Image: Raycast Target = ON
+  ☐ Icon child Image: Raycast Target = OFF
+  ☐ StackText: Raycast Target = OFF
+
+References:
+  ☐ InventoryGridUI: Cell Prefab assigned
+  ☐ InventoryGridUI: Item Prefab assigned
+  ☐ InventoryUIManager: inventoryPanel assigned
+  ☐ InventoryUIManager: mainGridUI assigned
+  ☐ InventoryItemUI: iconImage assigned
+  ☐ InventoryItemUI: backgroundImage assigned
+  ☐ InventoryItemUI: stackText assigned
+
+Testing:
+  ☐ Press Tab - inventory opens
+  ☐ Press F1 - items appear
+  ☐ Click item - becomes transparent
+  ☐ Drag item - follows mouse
+  ☐ Press R - item rotates
+  ☐ Release - item places in grid
+  ☐ Hover - tooltip appears
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 MOST IMPORTANT FIX:
+
+Open /Assets/Prefabs/Inventory/InventoryItemUi.prefab
+  → Select ROOT object
+  → Image component
+  → ✅ CHECK "Raycast Target"
+  → Save prefab
+
+This single fix will likely solve your dragging issue!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

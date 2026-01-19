@@ -1,0 +1,171 @@
+╔══════════════════════════════════════════════════════════════╗
+║      UNDERSTANDING RAYCAST TARGET FOR DRAGGING               ║
+╚══════════════════════════════════════════════════════════════╝
+
+WHAT IS "RAYCAST TARGET"?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Raycast Target is a checkbox on UI Image/Text components that determines
+whether that element can "catch" mouse clicks/hovers.
+
+When you click on UI, Unity shoots a "ray" from the mouse and checks what
+it hits. Only elements with Raycast Target ENABLED will be detected.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THE PROBLEM WITH YOUR PREFAB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your InventoryItemUi prefab looks like this:
+
+┌─────────────────────────────────────┐
+│  InventoryItemUi (ROOT)             │  ← Background Image
+│  ┌─────────────────────────────┐   │     Raycast Target: ??? 
+│  │  Icon (CHILD)               │   │  ← Icon Image
+│  │  [Item Sprite]              │   │     Raycast Target: OFF ❌
+│  │                              │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  StackText (CHILD)          [5]    │  ← Stack Text
+│                                     │     Raycast Target: ON ⚠️
+└─────────────────────────────────────┘
+
+PROBLEM:
+  When you click on the item, you're actually clicking the ICON or TEXT,
+  not the background! But the Icon has Raycast Target OFF, so Unity
+  ignores your click completely!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHAT NEEDS TO HAPPEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────┐
+│  InventoryItemUi (ROOT)             │  ← Background Image
+│  ┌─────────────────────────────┐   │     Raycast Target: ON ✅
+│  │  Icon (CHILD)               │   │  ← Icon Image
+│  │  [Item Sprite]              │   │     Raycast Target: OFF ❌
+│  │                              │   │     (transparent to clicks)
+│  └─────────────────────────────┘   │
+│                                     │
+│  StackText (CHILD)          [5]    │  ← Stack Text
+│                                     │     Raycast Target: OFF ❌
+└─────────────────────────────────────┘     (transparent to clicks)
+
+NOW:
+  - Click anywhere on item → Background catches it → Drag works! ✅
+  - Icon doesn't block clicks → Passes through to background
+  - Text doesn't block clicks → Passes through to background
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VISUAL CLICK FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WRONG (Current):
+  Mouse Click
+      ↓
+  Hits Icon (Raycast OFF) ❌
+      ↓
+  Click ignored - Nothing happens!
+
+
+CORRECT (After Fix):
+  Mouse Click
+      ↓
+  Hits Background (Raycast ON) ✅
+      ↓
+  InventoryItemUI.OnBeginDrag() called
+      ↓
+  Item starts dragging!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW TO FIX IN UNITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. In Project window, navigate to:
+   /Assets/Prefabs/Inventory/InventoryItemUi.prefab
+
+2. Double-click to open prefab
+
+3. Select ROOT "InventoryItemUi" object in Hierarchy
+
+4. Look in Inspector for "Image" component:
+   ┌─────────────────────────────────────┐
+   │ Image                               │
+   │ ├─ Source Image: [None]             │
+   │ ├─ Color: White                     │
+   │ ├─ Material: [None]                 │
+   │ └─ ☐ Raycast Target  ← UNCHECK THIS│  ← WRONG!
+   └─────────────────────────────────────┘
+
+   Should be:
+   ┌─────────────────────────────────────┐
+   │ Image                               │
+   │ ├─ Source Image: [None]             │
+   │ ├─ Color: White                     │
+   │ ├─ Material: [None]                 │
+   │ └─ ☑ Raycast Target  ← CHECK THIS! │  ← CORRECT!
+   └─────────────────────────────────────┘
+
+5. Select CHILD "Icon" object
+
+6. Image component:
+   └─ ☐ Raycast Target  ← MUST BE UNCHECKED
+
+7. Select CHILD "StackText" object
+
+8. TextMeshProUGUI component:
+   └─ ☐ Raycast Target  ← MUST BE UNCHECKED
+
+9. Save prefab: Ctrl+S or File → Save
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHY THIS MATTERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The InventoryItemUI script implements these interfaces:
+  - IBeginDragHandler  → Called when dragging starts
+  - IDragHandler       → Called while dragging
+  - IEndDragHandler    → Called when dragging ends
+
+But these only work if the GameObject with the script can RECEIVE
+the mouse events. That requires:
+  1. ✅ Image component on same GameObject
+  2. ✅ Image.raycastTarget = TRUE
+  3. ✅ CanvasGroup component (for alpha/blocking)
+  4. ✅ EventSystem in scene
+
+Without Raycast Target enabled, the Image is "invisible" to mouse
+clicks, so the drag handlers never get called!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TESTING AFTER FIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Save prefab
+2. Enter Play Mode
+3. Press Tab (open inventory)
+4. Press F1 (add test items)
+5. Move mouse over an item:
+   - Tooltip should appear ✅
+6. Click and hold on item:
+   - Item should become semi-transparent ✅
+   - Console might show: "Started dragging" (if you add Debug.Log)
+7. Move mouse while holding:
+   - Item follows cursor ✅
+   - Grid cells highlight green/red ✅
+8. Release mouse:
+   - Item snaps to grid ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Component              | Raycast Target | Why?
+───────────────────────┼────────────────┼──────────────────────
+Background (Root Image)│      ✅ ON     │ Receives drag events
+Icon (Child Image)     │      ❌ OFF    │ Lets clicks pass through
+StackText (Child Text) │      ❌ OFF    │ Lets clicks pass through
+
+This ensures clicks always hit the background, which has the drag
+handlers, allowing proper drag and drop functionality!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,105 @@
+╔══════════════════════════════════════════════════════════════╗
+║          INVENTORY DRAG SYSTEM - QUICK REFERENCE             ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ THE ONE FIX YOU NEED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Double-click: InventoryItemUi.prefab
+Select: ROOT GameObject
+Add: Image component
+Set: Raycast Target = ✅ TRUE
+Save: Ctrl+S
+
+→ See PREFAB_FIX_INSTRUCTIONS.txt for details
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 CONTROLS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tab        → Open/Close inventory
+F1         → Add test items
+Click+Drag → Move items
+R (drag)   → Rotate item
+Release    → Place item
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏗️  ARCHITECTURE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUI.cs
+  ├─ OnBeginDrag()  → Starts drag
+  ├─ OnDrag()       → Updates position
+  ├─ OnEndDrag()    → Places item
+  ├─ Update()       → Handles rotation
+  └─ All state contained within
+
+No dependencies! Each item manages itself.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 KEY COMPONENTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUI (script)
+  • Handles drag logic
+  • Manages visual feedback
+  • Communicates with grid
+
+Image (on root)
+  • Receives mouse events ← CRITICAL!
+  • Must have raycastTarget=true
+
+CanvasGroup
+  • Controls transparency
+  • Blocks raycasts during drag
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐛 TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Items not clickable?
+  → Add Image to prefab root
+
+Dragging not smooth?
+  → System uses canvas.scaleFactor (fixed)
+
+Can't place items?
+  → Check debug logs in Console
+
+Rotation not working?
+  → Item needs canRotate=true
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PREFAB STRUCTURE (Required):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+InventoryItemUi
+  ├─ Image ← ADD THIS!
+  ├─ CanvasGroup
+  ├─ InventoryItemUI
+  ├─ Icon (child)
+  └─ StackText (child)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⭐ PREFAB_FIX_INSTRUCTIONS.txt  ← Start here!
+📖 FINAL_SETUP_GUIDE.txt         ← Complete guide
+📊 DRAG_SYSTEM_COMPARISON.txt    ← Before/After
+💡 SELF_CONTAINED_DRAG_SYSTEM.txt ← How it works
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ CHECKLIST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] Add Image to prefab root
+[ ] Set Image.raycastTarget = true
+[ ] Set backgroundImage reference
+[ ] Set iconImage reference
+[ ] Set stackText reference
+[ ] Save prefab
+[ ] Test in Play Mode
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
