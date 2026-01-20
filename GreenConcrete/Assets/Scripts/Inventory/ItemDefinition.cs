@@ -32,6 +32,7 @@ public class ItemDefinition : ScriptableObject
 
     [Header("Item Behavior")]
     public MonoBehaviour behaviorScript;
+    public GameObject itemModel;
 
     public IItemBehavior GetBehavior()
     {
