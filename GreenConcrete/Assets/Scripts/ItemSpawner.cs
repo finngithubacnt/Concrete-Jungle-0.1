@@ -11,9 +11,9 @@ public class ItemSpawner : MonoBehaviour
     // This public function will be called by the Button's OnClick event.
    public void Update()
     {
-        if (Input.GetKey(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-
+           
             // Instantiate the prefab at the spawner's position and rotation.
             // Use Quaternion.identity for no rotation.
             if (prefabToSpawn != null && spawnPoint != null)
@@ -26,5 +26,6 @@ public class ItemSpawner : MonoBehaviour
                 Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
             }
         }
+        
     }
 }
