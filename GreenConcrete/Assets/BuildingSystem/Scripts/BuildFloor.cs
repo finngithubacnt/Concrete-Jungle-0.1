@@ -27,6 +27,7 @@ public class BuildFloor : MonoBehaviour
     public bool hasLogheld = false;
     //public List log1, log2, log3, log4, log5; 
     public GameObject Aim;
+    public RaycastCommand PlayerRaycast;
     void Start()
     {
         
