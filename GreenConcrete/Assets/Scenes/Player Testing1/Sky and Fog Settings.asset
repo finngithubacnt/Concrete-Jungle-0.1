@@ -272,7 +272,7 @@ MonoBehaviour:
     m_Value: 0.02
   aerosolTint:
     m_OverrideState: 1
-    m_Value: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    m_Value: {r: 0.9716981, g: 0.71960664, b: 0.809842, a: 1}
   aerosolMaximumAltitude:
     m_OverrideState: 1
     m_Value: 8289.296
@@ -290,7 +290,7 @@ MonoBehaviour:
     m_Value: 20000
   groundTint:
     m_OverrideState: 1
-    m_Value: {r: 0.12, g: 0.1, b: 0.09, a: 1}
+    m_Value: {r: 0.11999998, g: 0.09999997, b: 0.08999998, a: 1}
   groundColorTexture:
     m_OverrideState: 1
     m_Value: {fileID: 0}
@@ -323,13 +323,13 @@ MonoBehaviour:
     m_Value: 1
   horizonTint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 1, g: 0.3443396, b: 0.3443396, a: 1}
   zenithTint:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   horizonZenithShift:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -0.01
   m_SkyVersion: 3
   m_ObsoleteEarthPreset:
     m_OverrideState: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 1, g: 0.6273585, b: 0.65162235, a: 1}
   maxFogDistance:
     m_OverrideState: 1
     m_Value: 5000
@@ -388,7 +388,7 @@ MonoBehaviour:
     m_Value: 39.3
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 1404.7
+    m_Value: 1198.2
   enableVolumetricFog:
     m_OverrideState: 1
     m_Value: 1
@@ -400,7 +400,7 @@ MonoBehaviour:
     m_Value: 1
   depthExtent:
     m_OverrideState: 1
-    m_Value: 64
+    m_Value: 133.6
   denoisingMode:
     m_OverrideState: 1
     m_Value: 3
