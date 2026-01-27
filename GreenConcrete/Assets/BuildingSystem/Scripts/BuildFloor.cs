@@ -25,7 +25,8 @@ public class BuildFloor : MonoBehaviour
 
     [Header("Tranfer Values")]
     public bool hasLogheld = false;
-    public List log1, log2, log3, log4, log5; 
+    //public List log1, log2, log3, log4, log5; 
+    public GameObject Aim;
     void Start()
     {
         
@@ -33,6 +34,7 @@ public class BuildFloor : MonoBehaviour
 
     void Update()
     {
+        Aim = PlayerRaycast.Instance.AimedObject;
         if (hasLogheld && Aim == Log1)
         {
 
