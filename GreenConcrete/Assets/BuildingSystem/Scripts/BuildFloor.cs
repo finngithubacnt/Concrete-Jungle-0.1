@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 
 public class BuildFloor : MonoBehaviour
@@ -22,6 +23,9 @@ public class BuildFloor : MonoBehaviour
     public Transform LeftConnection;
     public Transform RightConnection;
 
+    [Header("Tranfer Values")]
+    public bool hasLogheld = false;
+    public List log1, log2, log3, log4, log5; 
     void Start()
     {
         
@@ -29,9 +33,57 @@ public class BuildFloor : MonoBehaviour
 
     void Update()
     {
+        if (hasLogheld && Aim == Log1)
+        {
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                HasLog1 = true;
+                hasLogheld = false;
+                Log1.SetActive(true);
+            }
+        }
+        if (hasLogheld && Aim == Log2)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                HasLog2 = true;
+                hasLogheld = false;
+                Log2.SetActive(true);
+            }
+        }
+        if (hasLogheld && Aim == Log3)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                HasLog3 = true;
+                hasLogheld = false;
+                Log3.SetActive(true);
+            }
+        }
+        if (hasLogheld && Aim == Log4)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                HasLog4 = true;
+                hasLogheld = false;
+                Log4.SetActive(true);
+            }
+        }
+        if (hasLogheld && Aim == Log5)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                HasLog5 = true;
+                hasLogheld = false;
+                Log5.SetActive(true);
+            }
+        }
         if (HasLog1 && HasLog2 && HasLog3 && HasLog4 && HasLog5)
         {
             IsComplete = true;
         }
+
+     
     }
 }
