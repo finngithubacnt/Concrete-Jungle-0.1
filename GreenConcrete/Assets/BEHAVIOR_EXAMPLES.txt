@@ -1,0 +1,365 @@
+╔══════════════════════════════════════════════════════════════╗
+║           ITEM BEHAVIOR EXAMPLES & USE CASES                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+This document shows practical examples of different item behaviors
+and how to use them in your game.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🍎 EXAMPLE 1: CONSUMABLE FOOD ITEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Item Definition Setup:
+  Name: "Apple"
+  Is Stackable: ✓ Yes
+  Max Stack Size: 20
+  Behavior Script: → ConsumableBehavior component
+
+ConsumableBehavior Properties:
+  Health Restore: 25
+  Stamina Restore: 10
+  Destroy On Use: ✓ Yes
+  Consume Effect Prefab: (optional particle effect)
+  Consume Sound: (optional eating sound)
+
+Result:
+  Right-click → Restores 25 HP + 10 stamina
+             → Reduces stack by 1
+             → Plays effects
+             → Auto-removes when stack = 0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 EXAMPLE 2: POTION WITH EFFECTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Item Definition Setup:
+  Name: "Health Potion"
+  Is Stackable: ✓ Yes
+  Max Stack Size: 10
+  Behavior Script: → HealthPotionBehavior component
+
+HealthPotionBehavior Properties:
+  Heal Amount: 50
+
+Result:
+  Right-click → Heals 50 HP
+             → Stack decreases
+             → Visual feedback in console
+             → Inventory auto-refreshes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗡️  EXAMPLE 3: WEAPON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Item Definition Setup:
+  Name: "Iron Sword"
+  Is Stackable: ✗ No
+  Can Rotate: ✓ Yes
+  Width: 1, Height: 3
+  Behavior Script: → WeaponBehavior component
+
+WeaponBehavior Properties:
+  Damage: 35
+  Range: 2.5
+  Weapon Model: (3D sword model prefab)
+
+Result:
+  Right-click → Logs weapon info
+             → (Customize for equip/attack)
+  
+Customization Ideas:
+  - Equip to hand slot
+  - Enable attack mode
+  - Show weapon stats UI
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️  EXAMPLE 4: ARMOR PIECE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Item Definition Setup:
+  Name: "Steel Helmet"
+  Is Stackable: ✗ No
+  Width: 2, Height: 2
+  Behavior Script: → EquipmentBehavior component
+
+EquipmentBehavior Properties:
+  Equipment Model: (helmet 3D model)
+  Attach Point: (player's head bone)
+  Armor Bonus: 15
+  Damage Bonus: 0
+  Speed Modifier: 1.0
+
+Result:
+  Right-click once  → Equips helmet
+                    → Shows model on player
+                    → Applies +15 armor
+  Right-click again → Unequips helmet
+                    → Hides model
+                    → Removes armor bonus
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 EXAMPLE 5: BUILDING TOOL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Item Definition Setup:
+  Name: "Building Tool"
+  Is Stackable: ✗ No
+  Width: 2, Height: 3
+  Behavior Script: → BuildingToolBehavior component
+
+BuildingToolBehavior Properties:
+  Building Mode Prefab: (building UI overlay)
+  Build Range: 5.0
+  Requires Resources: ✓ Yes
+  Tool Name: "Building Tool"
+  Description: "Right-click to enter building mode"
+
+Result:
+  Right-click → Toggles building mode
+             → Shows building UI
+             → Enables placement mode
+  Right-click again → Exits building mode
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 EXAMPLE 6: KEY (QUEST ITEM)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create Custom Script:
+
+using UnityEngine;
+
+public class KeyBehavior : MonoBehaviour, IItemBehavior
+{
+    public string doorId = "Door_1";
+    public string useMessage = "This key opens a specific door";
+    
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        Debug.Log($"Key: {item.definition.itemName}");
+        Debug.Log(useMessage);
+        Debug.Log($"Find door with ID: {doorId}");
+        
+        // Your custom logic:
+        // DoorManager.Instance.UnlockDoor(doorId);
+    }
+    
+    public void OnUse(GameObject player) { }
+    public void OnEquip(GameObject player) { }
+    public void OnUnequip(GameObject player) { }
+    public bool CanUse(GameObject player) { return false; }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💣 EXAMPLE 7: THROWABLE ITEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create Custom Script:
+
+using UnityEngine;
+
+public class ThrowableBehavior : MonoBehaviour, IItemBehavior
+{
+    public GameObject throwPrefab;
+    public float throwForce = 10f;
+    public int damage = 50;
+    
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        if (throwPrefab != null)
+        {
+            Vector3 spawnPos = player.transform.position + 
+                              player.transform.forward * 1f;
+            GameObject thrown = Instantiate(throwPrefab, spawnPos, 
+                                           player.transform.rotation);
+            
+            Rigidbody rb = thrown.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(player.transform.forward * throwForce, 
+                           ForceMode.Impulse);
+            }
+            
+            Debug.Log($"Threw {item.definition.itemName}!");
+            
+            // Decrease stack
+            item.currentStackSize--;
+            if (item.currentStackSize <= 0)
+            {
+                PlayerInventory.Instance?.mainGrid?.RemoveItem(item);
+            }
+            PlayerInventory.Instance?.onInventoryChanged?.Invoke();
+        }
+    }
+    
+    public void OnUse(GameObject player) { OnRightClick(null, player); }
+    public void OnEquip(GameObject player) { }
+    public void OnUnequip(GameObject player) { }
+    public bool CanUse(GameObject player) { return throwPrefab != null; }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 EXAMPLE 8: BOOK/DOCUMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create Custom Script:
+
+using UnityEngine;
+
+public class BookBehavior : MonoBehaviour, IItemBehavior
+{
+    [TextArea(5, 10)]
+    public string bookContent = "Once upon a time...";
+    public string bookTitle = "Ancient Tome";
+    
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        Debug.Log($"Reading: {bookTitle}");
+        Debug.Log(bookContent);
+        
+        // Your custom UI:
+        // BookUI.Instance.ShowBook(bookTitle, bookContent);
+    }
+    
+    public void OnUse(GameObject player) { OnRightClick(null, player); }
+    public void OnEquip(GameObject player) { }
+    public void OnUnequip(GameObject player) { }
+    public bool CanUse(GameObject player) { return true; }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️  EXAMPLE 9: TOOL WITH DURABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create Custom Script:
+
+using UnityEngine;
+
+public class ToolBehavior : MonoBehaviour, IItemBehavior
+{
+    public int maxDurability = 100;
+    public int durabilityPerUse = 5;
+    public GameObject toolModel;
+    
+    private int currentDurability;
+    private bool isEquipped = false;
+    
+    void Awake()
+    {
+        currentDurability = maxDurability;
+    }
+    
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        if (isEquipped)
+        {
+            OnUnequip(player);
+        }
+        else
+        {
+            OnEquip(player);
+        }
+    }
+    
+    public void OnUse(GameObject player)
+    {
+        currentDurability -= durabilityPerUse;
+        
+        if (currentDurability <= 0)
+        {
+            Debug.Log("Tool broke!");
+            OnUnequip(player);
+            // Remove from inventory
+        }
+        else
+        {
+            float percent = (currentDurability / (float)maxDurability) * 100;
+            Debug.Log($"Tool durability: {percent:F0}%");
+        }
+    }
+    
+    public void OnEquip(GameObject player)
+    {
+        isEquipped = true;
+        // Spawn tool model...
+        Debug.Log("Tool equipped");
+    }
+    
+    public void OnUnequip(GameObject player)
+    {
+        isEquipped = false;
+        // Remove tool model...
+        Debug.Log("Tool unequipped");
+    }
+    
+    public bool CanUse(GameObject player)
+    {
+        return currentDurability > 0;
+    }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 BEST PRACTICES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Always implement all IItemBehavior methods
+   Even if empty, they must exist
+
+2. Handle stack management properly
+   - Decrease currentStackSize
+   - Remove when <= 0
+   - Call onInventoryChanged.Invoke()
+
+3. Use Debug.Log for feedback
+   Helps with testing and debugging
+
+4. Check for null references
+   Player, components, prefabs, etc.
+
+5. Consider player state
+   Can they use this item right now?
+
+6. Provide visual/audio feedback
+   Effects, sounds, UI updates
+
+7. Document your behaviors
+   Add [Header] and [Tooltip] attributes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔄 COMMON PATTERNS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CONSUMABLE PATTERN:
+  OnRightClick() → Use effect → Decrease stack → Refresh UI
+
+EQUIPMENT PATTERN:
+  OnRightClick() → Toggle equip → Show/hide model → Apply stats
+
+TOOL PATTERN:
+  OnRightClick() → Enable mode → Track state → Provide feedback
+
+QUEST PATTERN:
+  OnRightClick() → Show info → Trigger event → Don't consume
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 QUICK TIPS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• One behavior GameObject can be shared across multiple items
+  Just adjust the properties in each item definition
+
+• Use PlayerInventory.Instance to access inventory system
+
+• Access player components:
+  player.GetComponent<PlayerHealth>()
+  player.GetComponent<PlayerController>()
+
+• For complex behaviors, create a manager:
+  BuildingManager.Instance.EnterBuildMode()
+
+• Stack handling template:
+  item.currentStackSize--;
+  if (item.currentStackSize <= 0)
+      PlayerInventory.Instance.mainGrid.RemoveItem(item);
+  PlayerInventory.Instance.onInventoryChanged.Invoke();
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

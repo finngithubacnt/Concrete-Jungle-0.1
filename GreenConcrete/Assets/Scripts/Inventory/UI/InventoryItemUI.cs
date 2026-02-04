@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [Header("UI References")]
     public Image iconImage;
@@ -227,6 +227,34 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (InventoryTooltip.Instance != null)
         {
             InventoryTooltip.Instance.HideTooltip();
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (item != null && item.definition != null)
+            {
+                IItemBehavior behavior = item.definition.GetBehavior();
+                if (behavior != null)
+                {
+                    GameObject player = GameObject.FindGameObjectWithTag("Player");
+                    if (player != null)
+                    {
+                        Debug.Log($"Right-clicked on {item.definition.itemName} - Executing behavior");
+                        behavior.OnRightClick(item, player);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Player GameObject not found! Make sure player has 'Player' tag.");
+                    }
+                }
+                else
+                {
+                    Debug.Log($"No behavior assigned to {item.definition.itemName}");
+                }
+            }
         }
     }
 

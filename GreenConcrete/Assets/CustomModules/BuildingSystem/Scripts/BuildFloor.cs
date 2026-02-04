@@ -35,7 +35,7 @@ public class BuildFloor : MonoBehaviour
 
     void Update()
     {
-        Aim = PlayerRaycast.Instance.AimedObject;
+      //  Aim = PlayerRaycast.Instance.AimedObject;
         if (hasLogheld && Aim == Log1)
         {
 

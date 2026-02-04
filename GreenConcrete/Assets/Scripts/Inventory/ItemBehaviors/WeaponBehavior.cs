@@ -35,4 +35,9 @@ public class WeaponBehavior : MonoBehaviour, IItemBehavior
     {
         return true;
     }
+
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        Debug.Log($"Right-clicked weapon: {item.definition.itemName}");
+    }
 }

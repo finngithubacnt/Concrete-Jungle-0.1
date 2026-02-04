@@ -1,0 +1,354 @@
+╔══════════════════════════════════════════════════════════════╗
+║         RIGHT-CLICK ACTION SYSTEM - COMPLETE GUIDE           ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 OVERVIEW:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You can now assign custom behavior scripts to items that execute when
+you right-click them in your inventory!
+
+Perfect for:
+  ✅ Consumables (health potions, food)
+  ✅ Equipment (armor, weapons)
+  ✅ Tools (keys, quest items)
+  ✅ Any custom item action you want!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 HOW TO USE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Create a Behavior Script
+  ┌────────────────────────────────────────────┐
+  │ 1. Create a new GameObject in scene        │
+  │ 2. Add your behavior component to it       │
+  │    (ConsumableBehavior, WeaponBehavior,    │
+  │     EquipmentBehavior, or custom)          │
+  │ 3. Configure the script properties         │
+  │ 4. Save it as a prefab (optional)          │
+  └────────────────────────────────────────────┘
+
+STEP 2: Assign to Item Definition
+  ┌────────────────────────────────────────────┐
+  │ 1. Select your ItemDefinition asset        │
+  │ 2. Find "Behavior Script" field            │
+  │ 3. Drag the GameObject or component        │
+  │ 4. Save the item definition                │
+  └────────────────────────────────────────────┘
+
+STEP 3: Test It!
+  ┌────────────────────────────────────────────┐
+  │ 1. Enter Play Mode                         │
+  │ 2. Open inventory (Tab)                    │
+  │ 3. Add items (F1)                          │
+  │ 4. Right-click an item                     │
+  │ 5. Watch the magic happen!                 │
+  └────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 INCLUDED BEHAVIOR SCRIPTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ConsumableBehavior
+   ┌────────────────────────────────────────────┐
+   │ Purpose: Consumable items like potions     │
+   │                                            │
+   │ Properties:                                │
+   │   • healthRestore (int)                    │
+   │   • staminaRestore (int)                   │
+   │   • destroyOnUse (bool)                    │
+   │   • consumeEffectPrefab (GameObject)       │
+   │   • consumeSound (AudioClip)               │
+   │                                            │
+   │ On Right-Click:                            │
+   │   → Restores health/stamina                │
+   │   → Plays effects and sound                │
+   │   → Reduces stack or removes item          │
+   │   → Refreshes inventory UI                 │
+   └────────────────────────────────────────────┘
+
+2. EquipmentBehavior
+   ┌────────────────────────────────────────────┐
+   │ Purpose: Equippable items (armor, gear)    │
+   │                                            │
+   │ Properties:                                │
+   │   • equipmentModel (GameObject)            │
+   │   • attachPoint (Transform)                │
+   │   • localPosition/Rotation/Scale           │
+   │   • armorBonus (int)                       │
+   │   • damageBonus (int)                      │
+   │   • speedModifier (float)                  │
+   │                                            │
+   │ On Right-Click:                            │
+   │   → Toggles equip/unequip                  │
+   │   → Shows/hides model on player            │
+   │   → Applies stat bonuses                   │
+   └────────────────────────────────────────────┘
+
+3. WeaponBehavior
+   ┌────────────────────────────────────────────┐
+   │ Purpose: Weapons and tools                 │
+   │                                            │
+   │ Properties:                                │
+   │   • damage (int)                           │
+   │   • range (float)                          │
+   │   • weaponModel (GameObject)               │
+   │                                            │
+   │ On Right-Click:                            │
+   │   → Logs weapon info                       │
+   │   → (Customize for your game!)             │
+   └────────────────────────────────────────────┘
+
+4. HealthPotionBehavior
+   ┌────────────────────────────────────────────┐
+   │ Purpose: Simple healing potion             │
+   │                                            │
+   │ Properties:                                │
+   │   • healAmount (float)                     │
+   │                                            │
+   │ On Right-Click:                            │
+   │   → Heals player                           │
+   │   → Reduces stack or removes item          │
+   │   → Refreshes inventory                    │
+   └────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 HOW IT WORKS (TECHNICAL):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Flow:
+  User right-clicks item in inventory
+    ↓
+  InventoryItemUI.OnPointerClick() detects right-click
+    ↓
+  Gets behavior from ItemDefinition.GetBehavior()
+    ↓
+  Finds player GameObject (tag: "Player")
+    ↓
+  Calls behavior.OnRightClick(item, player)
+    ↓
+  Behavior script executes custom logic
+
+Interface:
+  public interface IItemBehavior
+  {
+      void OnUse(GameObject player);
+      void OnEquip(GameObject player);
+      void OnUnequip(GameObject player);
+      bool CanUse(GameObject player);
+      void OnRightClick(InventoryItem item, GameObject player);  ← NEW!
+  }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✏️  CREATING CUSTOM BEHAVIORS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: Quest Item Behavior
+
+using UnityEngine;
+
+public class QuestItemBehavior : MonoBehaviour, IItemBehavior
+{
+    public string questId;
+    public string message = "This is a quest item";
+
+    public void OnUse(GameObject player)
+    {
+        Debug.Log("Quest items can't be used directly");
+    }
+
+    public void OnEquip(GameObject player)
+    {
+    }
+
+    public void OnUnequip(GameObject player)
+    {
+    }
+
+    public bool CanUse(GameObject player)
+    {
+        return false;
+    }
+
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        Debug.Log($"Quest item: {item.definition.itemName}");
+        Debug.Log(message);
+        
+        // Your custom quest logic here!
+        // QuestManager.Instance.AdvanceQuest(questId);
+        // UI.ShowMessage(message);
+    }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 EXAMPLE SETUP: Health Potion
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Create Behavior GameObject
+  1. Right-click in Hierarchy
+  2. Create Empty GameObject
+  3. Rename to "HealthPotionBehavior"
+  4. Add Component → HealthPotionBehavior script
+  5. Set healAmount = 50
+
+STEP 2: Assign to Item Definition
+  1. Find your "Health Potion" ItemDefinition asset
+  2. In Inspector, locate "Behavior Script" field
+  3. Drag "HealthPotionBehavior" GameObject into field
+  4. Save (Ctrl+S)
+
+STEP 3: Test
+  1. Play Mode
+  2. Tab → Open inventory
+  3. F1 → Add health potions
+  4. Right-click a potion
+  5. See console: "Healed 50 HP!"
+  6. Stack decreases or item removed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐛 TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEM: Nothing happens when right-clicking
+
+CHECK:
+  1. Is behavior script assigned in ItemDefinition?
+     → Inspector → "Behavior Script" field
+  
+  2. Does player have "Player" tag?
+     → Select player → Inspector → Tag dropdown
+  
+  3. Is the script component enabled?
+     → Check checkbox next to script name
+
+CONSOLE SAYS:
+  "No behavior assigned to [ItemName]"
+  → Assign a behavior script to the item definition
+
+  "Player GameObject not found!"
+  → Add "Player" tag to your player GameObject
+
+────────────────────────────────────────────────────────────
+
+PROBLEM: Item consumed but nothing happens
+
+CHECK:
+  1. Is OnRightClick() implemented in your behavior?
+  2. Check console for debug messages
+  3. Make sure logic is in OnRightClick(), not just OnUse()
+
+────────────────────────────────────────────────────────────
+
+PROBLEM: Stack not decreasing
+
+CHECK:
+  1. Is item definition set to isStackable = true?
+  2. Does behavior call item.currentStackSize--?
+  3. Does behavior call PlayerInventory.onInventoryChanged.Invoke()?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 CONTROLS SUMMARY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Left-click + drag → Move item in inventory
+Right-click        → Use/consume item (executes behavior)
+R (while dragging) → Rotate item
+Hover              → Show tooltip
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 TIPS & BEST PRACTICES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Organize Behaviors
+   → Create a "ItemBehaviors" folder in scene
+   → Group related behaviors together
+
+2. Reuse Behaviors
+   → One ConsumableBehavior can be shared
+   → Just adjust the properties per item
+
+3. Debug Messages
+   → Add Debug.Log() to see what's happening
+   → Helpful for testing new behaviors
+
+4. Player Reference
+   → Behaviors receive player GameObject
+   → You can access player components:
+     player.GetComponent<PlayerHealth>()
+
+5. Inventory Integration
+   → Call PlayerInventory.Instance.onInventoryChanged.Invoke()
+   → This refreshes the UI after changes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 BEHAVIOR COMPARISON:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Type          | Example      | Right-Click Action
+──────────────┼──────────────┼─────────────────────────────
+Consumable    | Health Potion| Uses & removes from inventory
+Equipment     | Armor        | Toggles equip/unequip
+Weapon        | Sword        | Custom (equip, info, etc.)
+Quest Item    | Key          | Shows message, advances quest
+Tool          | Pickaxe      | Custom tool behavior
+Throwable     | Grenade      | Custom throw logic
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 ADVANCED: Stack Management
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For stackable consumables:
+
+public void OnRightClick(InventoryItem item, GameObject player)
+{
+    // Your consumption logic
+    DoSomething();
+
+    // Decrease stack
+    item.currentStackSize--;
+    
+    // Remove if empty
+    if (item.currentStackSize <= 0)
+    {
+        InventoryGrid grid = PlayerInventory.Instance?.mainGrid;
+        if (grid != null)
+        {
+            grid.RemoveItem(item);
+        }
+    }
+
+    // Refresh UI
+    PlayerInventory.Instance?.onInventoryChanged?.Invoke();
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 FILES MODIFIED/CREATED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MODIFIED:
+  ✓ IItemBehavior.cs
+    → Added OnRightClick() method to interface
+  
+  ✓ InventoryItemUI.cs
+    → Added IPointerClickHandler interface
+    → Added OnPointerClick() to detect right-clicks
+  
+  ✓ WeaponBehavior.cs
+    → Implemented OnRightClick()
+  
+  ✓ HealthPotionBehavior.cs
+    → Implemented OnRightClick() with stack handling
+
+CREATED:
+  ✓ ConsumableBehavior.cs
+    → Full-featured consumable system
+  
+  ✓ EquipmentBehavior.cs
+    → Equipment equip/unequip system
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE SYSTEM IS READY! Just assign behaviors to your items! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

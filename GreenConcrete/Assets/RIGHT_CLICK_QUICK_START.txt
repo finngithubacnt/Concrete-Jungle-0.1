@@ -1,0 +1,80 @@
+╔══════════════════════════════════════════════════════════════╗
+║          RIGHT-CLICK ITEM ACTIONS - QUICK START              ║
+╚══════════════════════════════════════════════════════════════╝
+
+⚡ 3-STEP SETUP:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CREATE BEHAVIOR
+   Hierarchy → Right-click → Create Empty
+   → Add Component → (Choose behavior type)
+   → Configure properties
+
+2. ASSIGN TO ITEM
+   Select ItemDefinition asset
+   → Drag behavior GameObject to "Behavior Script" field
+
+3. TEST
+   Play Mode → Tab → F1 → Right-click item!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 AVAILABLE BEHAVIORS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ConsumableBehavior      → Potions, food
+EquipmentBehavior       → Armor, gear
+WeaponBehavior          → Weapons, tools
+HealthPotionBehavior    → Simple healing
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 CONTROLS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Right-click item → Execute behavior script
+Left-click drag  → Move item
+R (dragging)     → Rotate item
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 EXAMPLE: Health Potion
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Create Empty GameObject "HealthPotionBehavior"
+2. Add "HealthPotionBehavior" component
+3. Set healAmount = 50
+4. Drag to Health Potion item's "Behavior Script"
+5. Right-click in inventory → Heals + consumes!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  REQUIREMENTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Player GameObject must have "Player" tag
+✓ Behavior script assigned in ItemDefinition
+✓ Component enabled (checkbox checked)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 CREATE CUSTOM BEHAVIOR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+using UnityEngine;
+
+public class MyBehavior : MonoBehaviour, IItemBehavior
+{
+    public void OnRightClick(InventoryItem item, GameObject player)
+    {
+        Debug.Log("Right-clicked!");
+        // Your custom logic here!
+    }
+
+    // Implement other interface methods...
+    public void OnUse(GameObject player) { }
+    public void OnEquip(GameObject player) { }
+    public void OnUnequip(GameObject player) { }
+    public bool CanUse(GameObject player) { return true; }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+See RIGHT_CLICK_SYSTEM_GUIDE.txt for full documentation!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

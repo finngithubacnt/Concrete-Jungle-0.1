@@ -28,5 +28,5 @@ MonoBehaviour:
   isContainer: 0
   containerWidth: 0
   containerHeight: 0
-  behaviorScript: {fileID: 0}
-  itemModel: {fileID: 919132149155446097, guid: 9267f34179441444b9c168453487ef73, type: 3}
+  behaviorScript: {fileID: 9001027298482016800, guid: 538c2391a811a82448419234a4c26950, type: 3}
+  itemModel: {fileID: 4659407696663288425, guid: 538c2391a811a82448419234a4c26950, type: 3}

@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class HealthPotionBehavior : MonoBehaviour, IItemBehavior
+public class hammer : MonoBehaviour
 {
-    public float healAmount = 50f;
+    
 
     public void OnUse(GameObject player)
     {
-        Debug.Log($"Healed {healAmount} HP!");
+        Debug.Log($"gg");
     }
 
     public void OnEquip(GameObject player)
@@ -24,13 +24,13 @@ public class HealthPotionBehavior : MonoBehaviour, IItemBehavior
 
     public void OnRightClick(InventoryItem item, GameObject player)
     {
-        Debug.Log($"Right-clicked health potion - healing {healAmount} HP!");
+        Debug.Log($"Right-clicked hammer - ");
         OnUse(player);
 
         if (item.definition.isStackable)
         {
             item.currentStackSize--;
-            
+
             if (item.currentStackSize <= 0)
             {
                 InventoryGrid grid = PlayerInventory.Instance?.mainGrid;

@@ -6,4 +6,5 @@ public interface IItemBehavior
     void OnEquip(GameObject player);
     void OnUnequip(GameObject player);
     bool CanUse(GameObject player);
+    void OnRightClick(InventoryItem item, GameObject player);
 }
