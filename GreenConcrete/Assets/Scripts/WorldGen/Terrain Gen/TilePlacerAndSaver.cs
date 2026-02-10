@@ -28,11 +28,14 @@ public class TilePlacerAndSaver : MonoBehaviour
     public int x1;
     public int y1;
     public int z1;
+    public int x2;
+    public int y2;
+    public int z2;
     [Header("Tile List")]
     public GameObject[] Tiles;
     public GameObject closestTile;
     public int tilecountmax = 0;
-
+    public GameObject[] CenterPrefab;
     HashSet<Vector2Int> generatedTiles = new HashSet<Vector2Int>();
     Dictionary<Vector2Int, TileData> tiles = new Dictionary<Vector2Int, TileData>();
     Dictionary<Vector2Int, TileData> data;
@@ -146,8 +149,10 @@ public class TilePlacerAndSaver : MonoBehaviour
             TilePrefab,
             new Vector3(x * TileSize, y * TileSize, z * TileSize),
             Quaternion.identity
-        );
+             
 
+        );
+       
         TileData data = new TileData
         {
             gridPos = key,
@@ -155,8 +160,22 @@ public class TilePlacerAndSaver : MonoBehaviour
             height = y,
             biomeId = 1,//need to set this based on the biome generator
             terrainp = tile.GetComponent<Terrain>()
+
         };
         tilecountmax += 1;
         tiles.Add(key, data);
+        TilePrefab.name = $"Tile_{x}_{y}_{z}";
+        x2 = Random.Range(0, TileSize);
+        y2 = Random.Range(0, TileSize);
+        z2 = Random.Range(0, TileSize);
+        GameObject Center = Instantiate(
+            CenterPrefab[0],
+            new Vector3(x * TileSize + x2, y * TileSize, z * TileSize + z2),
+            Quaternion.identity
+
+
+        ); Center.name = $"Center_{x}_{y}_{z}";
+
+
     }
 }
