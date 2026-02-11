@@ -36,11 +36,11 @@ public class TilePlacerAndSaver : MonoBehaviour
     public GameObject closestTile;
     public int tilecountmax = 0;
     public GameObject CenterPrefab;
-    public GameObject[] Centers;
+    public GameObject[] Centers1;
     HashSet<Vector2Int> generatedTiles = new HashSet<Vector2Int>();
     Dictionary<Vector2Int, TileData> tiles = new Dictionary<Vector2Int, TileData>();
-   // Dictionary<Vector2Int, TileData> Centers = new Dictionary<Vector2Int, TileData>();
-   // public HashSet<Vector2Int> Centers = new HashSet<Vector2Int>();
+    Dictionary<Vector2Int, CenterData> centers = new Dictionary<Vector2Int, CenterData>();
+   ///public HashSet<Vector2Int> Centers = new HashSet<Vector2Int>();
     Dictionary<Vector2Int, TileData> data;
     Dictionary<Vector2Int, GameObject> visuals;
 
@@ -56,6 +56,12 @@ public class TilePlacerAndSaver : MonoBehaviour
         public bool hasTree;
         public int biomeId;
     }
+    public class CenterData
+    {
+        public Vector2Int gridPos;
+        public GameObject instance;
+
+    }
     void Start()
     {
 
@@ -70,7 +76,7 @@ public class TilePlacerAndSaver : MonoBehaviour
         Terrain terrain = GetComponentInChildren<Terrain>();
         terrain.terrainData.size = new Vector3(TileSize, 600, TileSize);
         Tiles = GameObject.FindGameObjectsWithTag("Tile");
-
+        Centers1 = GameObject.FindGameObjectsWithTag("Center");
         // Find the closest tile to the player
         for (int i = 0; i < Tiles.Length; i++)
         {
@@ -144,7 +150,7 @@ public class TilePlacerAndSaver : MonoBehaviour
     public void GenerateTile(int x, int y, int z)
     {
         Vector2Int key = new Vector2Int(x, z);
-
+        Vector2Int key1 = new Vector2Int(x, z);
         if (tiles.ContainsKey(key))
             return;
 
@@ -159,6 +165,7 @@ public class TilePlacerAndSaver : MonoBehaviour
        int x2 = Random.Range(0, TileSize);
        int y2 = Random.Range(0, TileSize);
        int z2 = Random.Range(0, TileSize);
+
         GameObject Centers = Instantiate(
             CenterPrefab,
             new Vector3(x * TileSize + x2, y * TileSize, z * TileSize + z2),
@@ -166,6 +173,13 @@ public class TilePlacerAndSaver : MonoBehaviour
 
 
         );
+        CenterData data1 = new CenterData
+        {
+            gridPos = key1,
+            instance = Centers,
+
+
+        };
         Centers.name = $"Center_{x}_{y}_{z}";
         TileData data = new TileData
         {
@@ -176,7 +190,7 @@ public class TilePlacerAndSaver : MonoBehaviour
             terrainp = tile.GetComponent<Terrain>()
 
         };
-        tilecountmax += 1;
+        centers.Add(key1, data1);
         tiles.Add(key, data);
         TilePrefab.name = $"Tile_{x}_{y}_{z}";
        

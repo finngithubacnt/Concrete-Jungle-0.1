@@ -12,6 +12,12 @@ public class BiomeManager : MonoBehaviour
     public Vector3 corner3;
     public Vector3 corner4;
     public Vector3 Center;
+    public Vector3 c1;
+    public Vector3 c2;
+    public Vector3 c3;
+    public Vector3 c4;
+
+    public int rndfirst;
     [Header("Refrences")]
 
     BiomeDefenition biomeDefenitionClass;
@@ -31,22 +37,61 @@ public class BiomeManager : MonoBehaviour
 
     public void Update()
     {
-       // Centers = tilePlacerAndSaverMono.tiles[new(x4,y4)];
-       tileSize = tilePlacerAndSaverMono.TileSize;
-        Centers = tilePlacerAndSaverMono.Centers;
+        // Centers = tilePlacerAndSaverMono.tiles[new(x4,y4)];
+        tileSize = tilePlacerAndSaverMono.TileSize;
+        Centers = tilePlacerAndSaverMono.Centers1;
         
         for (int i = 0; i < Centers.Length; i++)
         {
-            //draw a square around each center
+            Debug.DrawLine(c1, corner2, gizmoColor, 0.21f);
+            Debug.DrawLine(c2, c3, gizmoColor, 0.11f);
+            Debug.DrawLine(c3, corner4, gizmoColor, 0.11f);
+            Debug.DrawLine(c4, c1, gizmoColor, 0.11f);
+            if (c1 != null)
+            {
+
+                if (rndfirst == 1)
+                {
+                    c1 = corner2;
+                }
+                else if (rndfirst == 2)
+                {
+                    c2 = corner3;
+                }
+                else if (rndfirst == 3)
+                {
+                    c3 = corner4;
+                }
+                else if (rndfirst == 4)
+                {
+                    c4 = corner1;
+                }
+            }
+
+
+           
             corner1 = Centers[i].transform.position + new Vector3(-tileSize / 2, 0, -tileSize / 2);
             corner2 = Centers[i].transform.position + new Vector3(tileSize / 2, 0, -tileSize / 2);
             corner3 = Centers[i].transform.position + new Vector3(tileSize / 2, 0, tileSize / 2);
             corner4 = Centers[i].transform.position + new Vector3(-tileSize / 2, 0, tileSize / 2);
+            
             Debug.Log("Drawing square around center: " + Centers[i].name);
             Center = Centers[i].transform.position;
-            DrawSquare(Center);
 
+            rndfirst = Random.Range(1, 4);
+            int rndlast = Random.Range(1, 4);
+            c1 = corner1; c2 = corner2; c3 = corner3; c4 = corner4;
+
+
+
+
+            gizmoColor = Random.ColorHSV();
+  
+            
         }
+
+
+
     }
 
     public void DrawSquare(Vector3 Center)
@@ -55,7 +100,10 @@ public class BiomeManager : MonoBehaviour
         Debug.DrawLine(corner2, corner3, gizmoColor, 90);
         Debug.DrawLine(corner3, corner4, gizmoColor, 90);
         Debug.DrawLine(corner4, corner1, gizmoColor, 90);
+        //merge surrounding 4 lines onto this square
+
+
     }
 
-   
+
 }
