@@ -35,9 +35,12 @@ public class TilePlacerAndSaver : MonoBehaviour
     public GameObject[] Tiles;
     public GameObject closestTile;
     public int tilecountmax = 0;
-    public GameObject[] CenterPrefab;
+    public GameObject CenterPrefab;
+    public GameObject[] Centers;
     HashSet<Vector2Int> generatedTiles = new HashSet<Vector2Int>();
     Dictionary<Vector2Int, TileData> tiles = new Dictionary<Vector2Int, TileData>();
+   // Dictionary<Vector2Int, TileData> Centers = new Dictionary<Vector2Int, TileData>();
+   // public HashSet<Vector2Int> Centers = new HashSet<Vector2Int>();
     Dictionary<Vector2Int, TileData> data;
     Dictionary<Vector2Int, GameObject> visuals;
 
@@ -152,7 +155,18 @@ public class TilePlacerAndSaver : MonoBehaviour
              
 
         );
-       
+
+       int x2 = Random.Range(0, TileSize);
+       int y2 = Random.Range(0, TileSize);
+       int z2 = Random.Range(0, TileSize);
+        GameObject Centers = Instantiate(
+            CenterPrefab,
+            new Vector3(x * TileSize + x2, y * TileSize, z * TileSize + z2),
+            Quaternion.identity
+
+
+        );
+        Centers.name = $"Center_{x}_{y}_{z}";
         TileData data = new TileData
         {
             gridPos = key,
@@ -165,16 +179,7 @@ public class TilePlacerAndSaver : MonoBehaviour
         tilecountmax += 1;
         tiles.Add(key, data);
         TilePrefab.name = $"Tile_{x}_{y}_{z}";
-        x2 = Random.Range(0, TileSize);
-        y2 = Random.Range(0, TileSize);
-        z2 = Random.Range(0, TileSize);
-        GameObject Center = Instantiate(
-            CenterPrefab[0],
-            new Vector3(x * TileSize + x2, y * TileSize, z * TileSize + z2),
-            Quaternion.identity
-
-
-        ); Center.name = $"Center_{x}_{y}_{z}";
+       
 
 
     }

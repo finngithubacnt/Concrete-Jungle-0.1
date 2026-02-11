@@ -424,11 +424,14 @@ MonoBehaviour:
   x1: 0
   y1: 0
   z1: 0
+  x2: 0
+  y2: 0
+  z2: 0
   Tiles: []
   closestTile: {fileID: 0}
   tilecountmax: 0
-  CenterPrefab:
-  - {fileID: 5000436703927927895, guid: 6707146bdbcd16442958a6646728925a, type: 3}
+  CenterPrefab: {fileID: 5000436703927927895, guid: 6707146bdbcd16442958a6646728925a, type: 3}
+  Centers: []
 --- !u!114 &1820395370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,8 +446,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x4: 0
   y4: 0
+  corner1: {x: 0, y: 0, z: 0}
+  corner2: {x: 0, y: 0, z: 0}
+  corner3: {x: 0, y: 0, z: 0}
+  corner4: {x: 0, y: 0, z: 0}
+  Center: {x: 0, y: 0, z: 0}
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   gizmoRadius: 1
+  tileSize: 0
   Centers: []
 --- !u!1 &1937471726
 GameObject:
