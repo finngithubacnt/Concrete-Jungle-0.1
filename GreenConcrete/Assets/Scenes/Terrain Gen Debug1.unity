@@ -416,8 +416,8 @@ MonoBehaviour:
   Player: {fileID: 4948432718594856470}
   TilePrefab: {fileID: 2082159639732602410, guid: 7972ee5f925b5d947a3a5f97ab19ad74, type: 3}
   start: {fileID: 1820395366}
-  TileSize: 200
-  PlayerViewDistance: 2
+  TileSize: 9000
+  PlayerViewDistance: 1
   x: 0
   y: 0
   z: 0
@@ -431,7 +431,7 @@ MonoBehaviour:
   closestTile: {fileID: 0}
   tilecountmax: 0
   CenterPrefab: {fileID: 5000436703927927895, guid: 6707146bdbcd16442958a6646728925a, type: 3}
-  Centers: []
+  Centers1: []
 --- !u!114 &1820395370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +451,11 @@ MonoBehaviour:
   corner3: {x: 0, y: 0, z: 0}
   corner4: {x: 0, y: 0, z: 0}
   Center: {x: 0, y: 0, z: 0}
+  c1: {x: 0, y: 0, z: 0}
+  c2: {x: 0, y: 0, z: 0}
+  c3: {x: 0, y: 0, z: 0}
+  c4: {x: 0, y: 0, z: 0}
+  rndfirst: 0
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   gizmoRadius: 1
   tileSize: 0
