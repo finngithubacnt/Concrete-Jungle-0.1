@@ -43,31 +43,8 @@ public class BiomeManager : MonoBehaviour
         
         for (int i = 0; i < Centers.Length; i++)
         {
-            Debug.DrawLine(c1, corner2, gizmoColor, 0.21f);
-            Debug.DrawLine(c2, c3, gizmoColor, 0.11f);
-            Debug.DrawLine(c3, corner4, gizmoColor, 0.11f);
-            Debug.DrawLine(c4, c1, gizmoColor, 0.11f);
-            if (c1 != null)
-            {
-
-                if (rndfirst == 1)
-                {
-                    c1 = corner2;
-                }
-                else if (rndfirst == 2)
-                {
-                    c2 = corner3;
-                }
-                else if (rndfirst == 3)
-                {
-                    c3 = corner4;
-                }
-                else if (rndfirst == 4)
-                {
-                    c4 = corner1;
-                }
-            }
-
+            
+      
 
            
             corner1 = Centers[i].transform.position + new Vector3(-tileSize / 2, 0, -tileSize / 2);
