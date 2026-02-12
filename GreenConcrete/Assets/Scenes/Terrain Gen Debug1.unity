@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 216667307}
+  - component: {fileID: 216667308}
   m_Layer: 0
   m_Name: biomeManager
   m_TagString: Untagged
@@ -150,6 +151,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216667308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216667305}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb6a616ba7c72b4b965dd7b92a0755d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 0}
+  gridWidth: 50
+  gridHeight: 50
+  tileSize: 1
+  centers: []
 --- !u!1 &461518144
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +434,7 @@ MonoBehaviour:
   Player: {fileID: 4948432718594856470}
   TilePrefab: {fileID: 2082159639732602410, guid: 7972ee5f925b5d947a3a5f97ab19ad74, type: 3}
   start: {fileID: 1820395366}
-  TileSize: 9000
+  TileSize: 100
   PlayerViewDistance: 1
   x: 0
   y: 0
@@ -444,12 +462,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c980393e5c07d41a0cb216259641b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  p: 0
   x4: 0
   y4: 0
-  corner1: {x: 0, y: 0, z: 0}
-  corner2: {x: 0, y: 0, z: 0}
-  corner3: {x: 0, y: 0, z: 0}
-  corner4: {x: 0, y: 0, z: 0}
   Center: {x: 0, y: 0, z: 0}
   c1: {x: 0, y: 0, z: 0}
   c2: {x: 0, y: 0, z: 0}
@@ -460,6 +475,8 @@ MonoBehaviour:
   gizmoRadius: 1
   tileSize: 0
   Centers: []
+  CenterCount: 0
+  Corner1: []
 --- !u!1 &1937471726
 GameObject:
   m_ObjectHideFlags: 0

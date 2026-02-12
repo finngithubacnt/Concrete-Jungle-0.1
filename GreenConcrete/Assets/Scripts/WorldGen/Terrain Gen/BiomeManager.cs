@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine.TerrainTools;
 public class BiomeManager : MonoBehaviour
 {
-
+     public int p = 0;
     [Header("Cordinates")]
     public int x4;
     public int y4;
-    public Vector3 corner1;
+
+   /* public Vector3 corner1;
     public Vector3 corner2;
     public Vector3 corner3;
     public Vector3 corner4;
+   */
     public Vector3 Center;
     public Vector3 c1;
     public Vector3 c2;
@@ -28,7 +30,8 @@ public class BiomeManager : MonoBehaviour
     public int tileSize;
 
     public GameObject[] Centers;
-
+    public int CenterCount = 0;
+    [SerializeField] private List<Vector3> Corner1 = new List<Vector3>();
     public void Start()
     {
         tilePlacerAndSaverMono = GetComponent<TilePlacerAndSaver>();
@@ -37,46 +40,56 @@ public class BiomeManager : MonoBehaviour
 
     public void Update()
     {
-        // Centers = tilePlacerAndSaverMono.tiles[new(x4,y4)];
+        tilePlacerAndSaverMono = GetComponent<TilePlacerAndSaver>();
         tileSize = tilePlacerAndSaverMono.TileSize;
         Centers = tilePlacerAndSaverMono.Centers1;
-        
         for (int i = 0; i < Centers.Length; i++)
         {
-            
-      
+            //stop infinite loop but continue if more centers are added
 
-           
-            corner1 = Centers[i].transform.position + new Vector3(-tileSize / 2, 0, -tileSize / 2);
-            corner2 = Centers[i].transform.position + new Vector3(tileSize / 2, 0, -tileSize / 2);
-            corner3 = Centers[i].transform.position + new Vector3(tileSize / 2, 0, tileSize / 2);
-            corner4 = Centers[i].transform.position + new Vector3(-tileSize / 2, 0, tileSize / 2);
-            
-            Debug.Log("Drawing square around center: " + Centers[i].name);
-            Center = Centers[i].transform.position;
+            if (i <= CenterCount)
+            {
+                i += 1;
+            }
 
-            rndfirst = Random.Range(1, 4);
-            int rndlast = Random.Range(1, 4);
-            c1 = corner1; c2 = corner2; c3 = corner3; c4 = corner4;
+            if (CenterCount < Centers.Length)
+            {
 
-
+                Center = Centers[i].transform.position;
+                c1 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z - tileSize / 2);
+                c2 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z - tileSize / 2);
+                c3 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z + tileSize / 2);
+                c4 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z + tileSize / 2);
 
 
-            gizmoColor = Random.ColorHSV();
-  
-            
+                Corner1.Add(c1);
+                Corner1.Add(c2);
+                Corner1.Add(c3);
+                Corner1.Add(c4);
+
+                DrawSquare(Corner1[0]);
+                CenterCount+=1;
+                p = i;
+            }
+            else
+            {
+                break;
+            }
+
         }
 
 
 
     }
 
-    public void DrawSquare(Vector3 Center)
+
+    public void DrawSquare(Vector3 Corner1)
     {
-        Debug.DrawLine(corner1, corner2, gizmoColor, 90);
-        Debug.DrawLine(corner2, corner3, gizmoColor, 90);
-        Debug.DrawLine(corner3, corner4, gizmoColor, 90);
-        Debug.DrawLine(corner4, corner1, gizmoColor, 90);
+        
+        Debug.DrawLine(c1, c2, gizmoColor, 90);
+        Debug.DrawLine(c2, c3, gizmoColor, 90);
+        Debug.DrawLine(c3, c4, gizmoColor, 90);
+        Debug.DrawLine(c4, c1, gizmoColor, 90);
         //merge surrounding 4 lines onto this square
 
 

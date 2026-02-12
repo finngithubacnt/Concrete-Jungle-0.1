@@ -92,49 +92,7 @@ public class TilePlacerAndSaver : MonoBehaviour
         y1 = (int)closestTile.transform.position.y / TileSize;
         z1 = (int)closestTile.transform.position.z / TileSize;
         Vector3Int cell = new Vector3Int(x, y, z);
-        /*
-        //top
-        if (terrain.topNeighbor == null)
-        {
-            GenerateTile(x, y, z + 1);
-            topNeighbor1 = terrain.topNeighbor;
-            TilePrefab.name = $"Tile_{x}_{y}_{z}";
-            TilePrefab.transform.parent = start.transform;
-            TilePrefab.tag = "Tile";
-        }
 
-        //bottom
-        if (terrain.bottomNeighbor == null)
-        {
-            GenerateTile(x, y, z - 1);
-            bottomNeighbor1 = terrain.bottomNeighbor;
-            TilePrefab.name = $"Tile_{x}_{y}_{z}";
-            TilePrefab.transform.parent = start.transform;
-            TilePrefab.tag = "Tile";
-        }
-
-        //left
-        if (terrain.leftNeighbor == null)
-        {
-            GenerateTile(x - 1, y, z);
-            leftNeighbor1 = terrain.leftNeighbor;
-            TilePrefab.name = $"Tile_{x}_{y}_{z}";
-            TilePrefab.transform.parent = start.transform;
-            TilePrefab.tag = "Tile";
-        }
-
-        //right
-        if (terrain.rightNeighbor == null)
-        {
-            GenerateTile(x + 1, y, z);
-            rightNeighbor1 = terrain.rightNeighbor;
-            TilePrefab.name = $"Tile_{x}_{y}_{z}";
-            TilePrefab.transform.parent = start.transform;
-            TilePrefab.tag = "Tile";
-        }
-        */
-
-        // Generate tiles in a grid within the player's view distance
         for (int x = -PlayerViewDistance; x <= PlayerViewDistance; x++)
         {
             for (int z = -PlayerViewDistance; z <= PlayerViewDistance; z++)
@@ -146,7 +104,7 @@ public class TilePlacerAndSaver : MonoBehaviour
         }
 
     }
-    // Generates a tile at the specified coordinates if it hasn't been generated already
+   
     public void GenerateTile(int x, int y, int z)
     {
         Vector2Int key = new Vector2Int(x, z);
@@ -158,8 +116,6 @@ public class TilePlacerAndSaver : MonoBehaviour
             TilePrefab,
             new Vector3(x * TileSize, y * TileSize, z * TileSize),
             Quaternion.identity
-             
-
         );
 
        int x2 = Random.Range(0, TileSize);
