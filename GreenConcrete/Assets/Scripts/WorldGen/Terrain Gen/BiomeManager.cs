@@ -40,10 +40,16 @@ public class BiomeManager : MonoBehaviour
 
     public void Update()
     {
+        List<Vector3> Center1 = new List<Vector3>();
+        foreach (GameObject center in Centers)
+        {
+            Center1.Add(center.transform.position);
+        }
+
         tilePlacerAndSaverMono = GetComponent<TilePlacerAndSaver>();
         tileSize = tilePlacerAndSaverMono.TileSize;
         Centers = tilePlacerAndSaverMono.Centers1;
-        for (int i = 0; i < Centers.Length; i++)
+        for (int i = 0; i < Center1.Count; i++)
         {
             //stop infinite loop but continue if more centers are added
 
@@ -67,13 +73,15 @@ public class BiomeManager : MonoBehaviour
                 Corner1.Add(c3);
                 Corner1.Add(c4);
 
-                DrawSquare(Corner1[0]);
+                DrawSquare(Corner1[i]);
                 CenterCount+=1;
                 p = i;
+                //reset center1.count max for next loop
+                Debug.Log("CenterCount: " + CenterCount + ", Centers.Length: " + Centers.Length );
             }
             else
             {
-                break;
+                continue;
             }
 
         }
@@ -85,7 +93,8 @@ public class BiomeManager : MonoBehaviour
 
     public void DrawSquare(Vector3 Corner1)
     {
-        
+        gizmoColor = Random.ColorHSV();
+        Debug.Log("Drawing square at: " + Corner1);
         Debug.DrawLine(c1, c2, gizmoColor, 90);
         Debug.DrawLine(c2, c3, gizmoColor, 90);
         Debug.DrawLine(c3, c4, gizmoColor, 90);
