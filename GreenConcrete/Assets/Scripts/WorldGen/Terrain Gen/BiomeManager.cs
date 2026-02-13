@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.ProBuilder.MeshOperations;
+using System.Linq;
 using UnityEngine.TerrainTools;
 public class BiomeManager : MonoBehaviour
 {
@@ -18,7 +20,8 @@ public class BiomeManager : MonoBehaviour
     public Vector3 c2;
     public Vector3 c3;
     public Vector3 c4;
-
+    public Vector3[] Closest4Centers;
+    public Vector3[] Center4;
     public int rndfirst;
     [Header("Refrences")]
 
@@ -44,19 +47,19 @@ public class BiomeManager : MonoBehaviour
         foreach (GameObject center in Centers)
         {
             Center1.Add(center.transform.position);
+            
+             
         }
 
         tilePlacerAndSaverMono = GetComponent<TilePlacerAndSaver>();
         tileSize = tilePlacerAndSaverMono.TileSize;
         Centers = tilePlacerAndSaverMono.Centers1;
-        for (int i = 0; i < Center1.Count; i++)
+        
+       /* for (int i = 0; i < Center1.Count; i++)
         {
             //stop infinite loop but continue if more centers are added
 
-            if (i <= CenterCount)
-            {
-                i += 1;
-            }
+         
 
             if (CenterCount < Centers.Length)
             {
@@ -74,10 +77,14 @@ public class BiomeManager : MonoBehaviour
                 Corner1.Add(c4);
 
                 DrawSquare(Corner1[i]);
-                CenterCount+=1;
+                CenterCount += 1;
                 p = i;
-                //reset center1.count max for next loop
-                Debug.Log("CenterCount: " + CenterCount + ", Centers.Length: " + Centers.Length );
+
+                Debug.Log("CenterCount: " + CenterCount + ", Centers.Length: " + Centers.Length);
+                gizmoColor = Random.ColorHSV();
+                Debug.Log("Drawing square at: " + Corner1);
+                
+               
             }
             else
             {
@@ -85,16 +92,41 @@ public class BiomeManager : MonoBehaviour
             }
 
         }
+       */
+      
+       foreach (GameObject center in Centers)
+       {
+           
+           Center = center.transform.position;
+            c1 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z - tileSize / 2);
+            c2 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z - tileSize / 2);
+            c3 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z + tileSize / 2);
+            c4 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z + tileSize / 2);
+            
+            Corner1.Add(c1);
+            Corner1.Add(c2);
+            Corner1.Add(c3);
+            Corner1.Add(c4);
+            
+            DrawSquare(center.transform.position);
+            
 
+            //Detect four closest centers Transforms and draw lines to them
+             Closest4Centers = 
 
+        }
 
+        for (int i = 0; i < Centers.Length; i++)
+        {
+           
+           
+        }
     }
+
 
 
     public void DrawSquare(Vector3 Corner1)
     {
-        gizmoColor = Random.ColorHSV();
-        Debug.Log("Drawing square at: " + Corner1);
         Debug.DrawLine(c1, c2, gizmoColor, 90);
         Debug.DrawLine(c2, c3, gizmoColor, 90);
         Debug.DrawLine(c3, c4, gizmoColor, 90);
