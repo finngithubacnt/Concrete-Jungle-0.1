@@ -98,7 +98,7 @@ public class BiomeManager : MonoBehaviour
        {
            
            Center = center.transform.position;
-            c1 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z - tileSize / 2);
+           /* c1 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z - tileSize / 2);
             c2 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z - tileSize / 2);
             c3 = new Vector3(Center.x + tileSize / 2, Center.y, Center.z + tileSize / 2);
             c4 = new Vector3(Center.x - tileSize / 2, Center.y, Center.z + tileSize / 2);
@@ -109,10 +109,10 @@ public class BiomeManager : MonoBehaviour
             Corner1.Add(c4);
             
             DrawSquare(center.transform.position);
-            
+            */
 
             //Detect four closest centers Transforms and draw lines to them
-             Closest4Centers = 
+             
 
         }
 
