@@ -60,7 +60,7 @@ public class Movement : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject)
         {
             isGrounded = true;
         }
