@@ -1383,9 +1383,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17af89b23331b9141a1aa9001df98e27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  sprintSpeed: 10
-  jumpForce: 7
+  walkSpeed: 12.38
+  sprintSpeed: 279.48
+  jumpForce: 34.42
   isGrounded: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
