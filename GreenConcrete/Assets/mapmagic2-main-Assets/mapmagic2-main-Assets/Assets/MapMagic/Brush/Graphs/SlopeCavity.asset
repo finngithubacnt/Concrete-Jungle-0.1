@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9bc43e142692db4e92eef81e1903ca4, type: 3}
   m_Name: SlopeCavity
   m_EditorClassIdentifier: 
-  changeVersion: 71
   serializedVersion: 0
   guiShowDependent: 0
   guiShowShared: 0
@@ -20,12 +19,6 @@ MonoBehaviour:
   guiShowDebug: 0
   guiMiniPos: {x: 20, y: 20}
   guiMiniAnchor: {x: 0, y: 0}
-  debugGenerate: 1
-  debugGenInfo: 0
-  debugGraphBackground: 1
-  debugGraphBackColor: 0.5
-  debugGraphFps: 1
-  drawInSceneView: 0
   serializer200beta:
     serializedData:
     - refId: 0
@@ -38,6 +31,7 @@ MonoBehaviour:
       - linkInlets
       - linkOutlets
       - groups
+      - seed
       - exposed
       - defaults
       values:
@@ -51,6 +45,8 @@ MonoBehaviour:
         v: 41
       - t: 255
         v: 42
+      - t: 1
+        v: 12345
       - t: 255
         v: 43
       - t: 255
@@ -75,11 +71,11 @@ MonoBehaviour:
       - t: 4
         v: 4
       - t: 4
-        v: 2
+        v: 16
       - t: 1
-        v: 33816834
+        v: 268697858
       - t: 6
-        v: 33816834
+        v: 268697858
       special: 
       uniObj: {fileID: 0}
     - refId: 2
@@ -116,25 +112,25 @@ MonoBehaviour:
       fields:
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 3
         v: 1
       - t: 11
         v: -846975797108408295
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4567911030049346683
       - t: 255
         v: 4
       - t: 255
         v: 5
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -177,25 +173,25 @@ MonoBehaviour:
       fields:
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 3
         v: 1
       - t: 11
         v: -728249432029528035
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4554169646866313825
       - t: 255
         v: 7
       - t: 255
         v: 5
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -227,12 +223,12 @@ MonoBehaviour:
       - range
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 2
         v: 1106247680
@@ -244,14 +240,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -709899682473574370
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4586069543746904523
       - t: 255
         v: 9
       - t: 255
         v: 10
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -294,25 +290,25 @@ MonoBehaviour:
       fields:
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 3
         v: 1
       - t: 11
         v: -684575730662637537
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4558673246493684321
       - t: 255
         v: 12
       - t: 255
         v: 13
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -359,12 +355,12 @@ MonoBehaviour:
       - invert
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 255
         v: 15
@@ -378,14 +374,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -639534236830793695
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4587222465251511370
       - t: 255
         v: 18
       - t: 255
         v: 19
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -464,9 +460,9 @@ MonoBehaviour:
       - y
       values:
       - t: 2
-        v: 1139103061
+        v: 1139113984
       - t: 2
-        v: 3276333966
+        v: 3276341248
       special: 
       uniObj: {fileID: 0}
     - refId: 19
@@ -494,12 +490,12 @@ MonoBehaviour:
       - spread
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 255
         v: 21
@@ -511,14 +507,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -471699284408926170
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4590544320336659848
       - t: 255
         v: 22
       - t: 255
         v: 10
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -566,12 +562,12 @@ MonoBehaviour:
       - opacity
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 255
         v: 24
@@ -593,14 +589,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -7704346145547354096
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4589340958516226451
       - t: 255
         v: 29
       - t: 255
         v: 30
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -646,8 +642,7 @@ MonoBehaviour:
       fields: []
       values: []
       special: 
-      uniObj: {fileID: 8574412962073106934, guid: cf3df7d7519ee014ebecbfe99c6cab3a,
-        type: 2}
+      uniObj: {fileID: 8574412962073106934, guid: cf3df7d7519ee014ebecbfe99c6cab3a, type: 2}
     - refId: 27
       type: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
@@ -711,12 +706,12 @@ MonoBehaviour:
       - opacity
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 255
         v: 32
@@ -738,14 +733,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -7678707733410873327
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4586963057912974829
       - t: 255
         v: 35
       - t: 255
         v: 30
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -780,8 +775,7 @@ MonoBehaviour:
       fields: []
       values: []
       special: 
-      uniObj: {fileID: 8574412962073106934, guid: 240ea90774073d84cb4ef9b3c461e28c,
-        type: 2}
+      uniObj: {fileID: 8574412962073106934, guid: 240ea90774073d84cb4ef9b3c461e28c, type: 2}
     - refId: 34
       type: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
@@ -816,12 +810,12 @@ MonoBehaviour:
       - hardness
       - enabled
       - id
-      - draftTime
-      - mainTime
+      - version
       - guiPosition
       - guiSize
       - guiPreview
       - guiAdvanced
+      - guiDebug
       values:
       - t: 2
         v: 1065353216
@@ -835,14 +829,14 @@ MonoBehaviour:
         v: 1
       - t: 11
         v: -88195126198796273
-      - t: 9
+      - t: 11
         v: 0
-      - t: 9
-        v: 4587092761582243099
       - t: 255
         v: 38
       - t: 255
         v: 39
+      - t: 3
+        v: 0
       - t: 3
         v: 0
       - t: 3
@@ -1383,8 +1377,8 @@ MonoBehaviour:
       special: "< \"root\", \"Den.Tools.DictionaryOrdered`2[[System.String, mscorlib],[MapMagic.Expose.Override+ObjType,
         MapMagic]], Den.Tools\", id1,\r\n  < \"dict\", \"System.Collections.Generic.Dictionary`2[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id2,\r\n   
-        < \"buckets\", \"System.Int32[], mscorlib\", id3 ,-1,-1,-1,7,-1,-1,8,2,-1,-1,-1,4,-1,-1,-1,-1,-1
-        >,\r\n    < \"entries\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
+        < \"_buckets\", \"System.Int32[], mscorlib\", id3 ,7,6,0,4,3,5,0 >,\r\n   
+        < \"_entries\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]][], mscorlib\", id4,\r\n     
         < \"0\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
@@ -1409,7 +1403,7 @@ MonoBehaviour:
         mscorlib\", id8 > > >,\r\n      < \"3\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
         < \"hashCode\", System.Int32, id0, 1467335929 >,\r\n        < \"next\", System.Int32,
-        id0, -1 >,\r\n        < \"key\", System.String, id10, \"Slope\" >,\r\n       
+        id0, 0 >,\r\n        < \"key\", System.String, id10, \"Slope\" >,\r\n       
         < \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
         < \"obj\", System.Single, id0, 1 >,\r\n          < \"type\", \"System.RuntimeType,
         mscorlib\", id8 > > >,\r\n      < \"4\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
@@ -1420,95 +1414,34 @@ MonoBehaviour:
         < \"obj\", System.Single, id0, 1 >,\r\n          < \"type\", \"System.RuntimeType,
         mscorlib\", id8 > > >,\r\n      < \"5\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, -1 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"6\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, -1 >,\r\n        < \"next\", System.Int32,
-        id0, 5 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"7\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
         < \"hashCode\", System.Int32, id0, 2121530643 >,\r\n        < \"next\", System.Int32,
-        id0, 3 >,\r\n        < \"key\", System.String, id12, \"CavityLayer\" >,\r\n       
+        id0, -1 >,\r\n        < \"key\", System.String, id12, \"CavityLayer\" >,\r\n       
         < \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
         <  \"obj\", \"UnityEngine.TerrainLayer, UnityEngine.TerrainModule\", id0,
         0 >,\r\n          < \"type\", \"System.RuntimeType, mscorlib\", id13, \"UnityEngine.TerrainLayer,
-        UnityEngine.TerrainModule\" > > >,\r\n      < \"8\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
+        UnityEngine.TerrainModule\" > > >,\r\n      < \"6\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
         mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
         < \"hashCode\", System.Int32, id0, 1353588558 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.String, id14, \"SlopeLayer\" >,\r\n       
+        id0, -1 >,\r\n        < \"key\", System.String, id14, \"SlopeLayer\" >,\r\n       
         < \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
         <  \"obj\", \"UnityEngine.TerrainLayer, UnityEngine.TerrainModule\", id0,
         1 >,\r\n          < \"type\", \"System.RuntimeType, mscorlib\", id13 > >
-        >,\r\n      < \"9\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"10\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"11\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"12\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"13\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"14\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"15\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > >,\r\n      < \"16\", \"System.Collections.Generic.Dictionary`2+Entry[[System.String,
-        mscorlib],[MapMagic.Expose.Override+ObjType, MapMagic]], mscorlib\", id0,\r\n       
-        < \"hashCode\", System.Int32, id0, 0 >,\r\n        < \"next\", System.Int32,
-        id0, 0 >,\r\n        < \"key\", System.Object, id0, null >,\r\n        <
-        \"value\", \"MapMagic.Expose.Override+ObjType, MapMagic\", id0,\r\n         
-        < \"obj\", System.Object, id0, null >,\r\n          < \"type\", System.Object,
-        id0, null > > > >,\r\n    < \"count\", System.Int32, id0, 9 >,\r\n    < \"comparer\",
-        \"System.Collections.Generic.GenericEqualityComparer`1[[System.String, mscorlib]],
-        mscorlib\", id15 >,\r\n    < \"version\", System.Int32, id0, 11 > >,\r\n 
-        < \"order\", \"System.Collections.Generic.List`1[[System.String, mscorlib]],
-        mscorlib\", id16,\r\n    < \"_items\", \"System.String[], mscorlib\", id17,\r\n     
-        < \"0\", \"System.String, mscorlib\", id5 >,\r\n      < \"1\", \"System.String,
-        mscorlib\", id7 >,\r\n      < \"2\", \"System.String, mscorlib\", id9 >,\r\n     
-        < \"3\", \"System.String, mscorlib\", id10 >,\r\n      < \"4\", \"System.String,
-        mscorlib\", id11 >,\r\n      < \"5\", \"System.String, mscorlib\", id12 >,\r\n     
-        < \"6\", \"System.String, mscorlib\", id14 >,\r\n      < \"7\", System.Object,
-        id0, null >,\r\n      < \"8\", System.Object, id0, null >,\r\n      < \"9\",
-        System.Object, id0, null >,\r\n      < \"10\", System.Object, id0, null >,\r\n     
-        < \"11\", System.Object, id0, null >,\r\n      < \"12\", System.Object, id0,
-        null >,\r\n      < \"13\", System.Object, id0, null >,\r\n      < \"14\",
-        System.Object, id0, null >,\r\n      < \"15\", System.Object, id0, null >
-        >,\r\n    < \"_size\", System.Int32, id0, 7 >,\r\n    < \"_version\", System.Int32,
-        id0, 11 > > >"
+        > >,\r\n    < \"_count\", System.Int32, id0, 7 >,\r\n    < \"_comparer\",
+        System.Object, id0, null >,\r\n    < \"_version\", System.Int32, id0, 7 >
+        >,\r\n  < \"order\", \"System.Collections.Generic.List`1[[System.String,
+        mscorlib]], mscorlib\", id15,\r\n    < \"_items\", \"System.String[], mscorlib\",
+        id16,\r\n      < \"0\", \"System.String, mscorlib\", id5 >,\r\n      < \"1\",
+        \"System.String, mscorlib\", id7 >,\r\n      < \"2\", \"System.String, mscorlib\",
+        id9 >,\r\n      < \"3\", \"System.String, mscorlib\", id10 >,\r\n      <
+        \"4\", \"System.String, mscorlib\", id11 >,\r\n      < \"5\", \"System.String,
+        mscorlib\", id12 >,\r\n      < \"6\", \"System.String, mscorlib\", id14 >,\r\n     
+        < \"7\", System.Object, id0, null >,\r\n      < \"8\", System.Object, id0,
+        null >,\r\n      < \"9\", System.Object, id0, null >,\r\n      < \"10\",
+        System.Object, id0, null >,\r\n      < \"11\", System.Object, id0, null >,\r\n     
+        < \"12\", System.Object, id0, null >,\r\n      < \"13\", System.Object, id0,
+        null >,\r\n      < \"14\", System.Object, id0, null >,\r\n      < \"15\",
+        System.Object, id0, null > >,\r\n    < \"_size\", System.Int32, id0, 7 >,\r\n   
+        < \"_version\", System.Int32, id0, 11 > > >"
       uniObj: {fileID: 0}
     - refId: 75
       type: UnityEngine.Object[], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,

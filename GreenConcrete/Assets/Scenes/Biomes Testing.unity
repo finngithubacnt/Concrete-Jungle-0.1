@@ -881,7 +881,7 @@ MonoBehaviour:
   heightWeldMargins: 5
   splatsWeldMargins: 2
   guiHideWireframe: 0
-  guiThreads: 0
+  guiThreads: 1
   applyColliders: 1
   setDirty: 0
   shift: 0
