@@ -9,14 +9,14 @@ public class CityGenerator : MonoBehaviour
 
     [Header("Prefabs")]
     public GameObject tilePrefab;
-   // public GameObject roadStraightPrefab;
-    //public GameObject roadCornerPrefab;
-    //public GameObject roadTJunctionPrefab;
-    //public GameObject roadIntersectionPrefab;
-   // public GameObject roadStraightConnectorPrefab;
+    public GameObject roadStraightPrefab;
+   public GameObject roadCornerPrefab;
+    public GameObject roadTJunctionPrefab;
+    public GameObject roadIntersectionPrefab;
+    public GameObject roadStraightConnectorPrefab;
 
     [Header("Buildings")]
-   // public GameObject buildingCornerPrefab;
+    public GameObject buildingCornerPrefab;
 
     [Header("Player Reference")]
     public Transform player;
