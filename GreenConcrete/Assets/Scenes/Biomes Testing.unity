@@ -168,6 +168,172 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &630110600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 630110602}
+  - component: {fileID: 630110601}
+  m_Layer: 0
+  m_Name: MapMagic (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &630110601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630110600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c503e08679b9d8d408f0a3e55874ae93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000, guid: 9207beade2da95e4d955602f6a38f5d9, type: 2}
+  guiOpenObjectSelector: 0
+  guiTiles: 1
+  tiles:
+    allowMove: 1
+    generateLimited: 1
+    generateCenter:
+      x: 0
+      z: 0
+    generateInfinite: 1
+    generateRange: 20
+    retainMargin: 1
+    genAroundMainCam: 1
+    genAroundObjsTag: 0
+    genAroundTag: 
+    genAroundTfms: 1
+    genAroundTfmsList:
+    - {fileID: 4374923586338849842}
+    genAroundCoordinates: 0
+    genCoordinates: []
+    serializedTiles: []
+    serializedCoords: []
+    customTiles: []
+    serializedPinnedCoords: []
+  tileSize:
+    x: 100
+    z: 100
+  previewCoord:
+    x: 0
+    z: 0
+  previewAssigned: 0
+  tileResolution: 33
+  tileMargins: 16
+  draftsInEditor: 1
+  draftsInPlaymode: 1
+  draftResolution: 33
+  draftMargins: 2
+  guiLocks: 0
+  locks: []
+  guiInfiniteTerrains: 1
+  hideFarTerrains: 1
+  mainRange: 2
+  clearOnNodeRemove: 1
+  terrainSettings:
+    allowAutoConnect: 1
+    groupingID: 0
+    baseMapDist: 1000
+    showBaseMap: 1
+    baseMapResolution: 1024
+    drawInstanced: 1
+    pixelError: 1
+    shadowCastingMode: 0
+    reflectionProbeUsage: 1
+    editorRenderFlags: 7
+    heightmapMaximumLOD: 0
+    material: {fileID: 631915688}
+    detailDraw: 1
+    detailDistance: 80
+    detailDensity: 1
+    treeDistance: 1000
+    treeBillboardStart: 200
+    treeFadeLength: 5
+    treeFullLod: 150
+    treeLODBiasMultiplier: 1
+    bakeLightProbesForTrees: 0
+    deringLightProbesForTrees: 1
+    preserveTreePrototypeLayers: 0
+    windSpeed: 0.5
+    windSize: 0.5
+    windBending: 0.5
+    grassTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    guiCopy: 0
+    copyLayersTags: 1
+    copyComponents: 0
+  globals:
+    height: 1.67
+    heightInterpolation: 1
+    heightSplit: 129
+    heightMainApply: 2
+    heightDraftApply: 0
+    grassResDownscale: 1
+    grassResPerPatch: 16
+    grassScatterMode: 1
+    objectsNumPerFrame: 500
+    holesRes: 64
+    customControlTextureNames:
+    - _ControlTexture1
+    ctsProfile: {fileID: 0}
+    microSplatPropData: {fileID: 0}
+    microSplatTerrainDescriptor: 0
+    microSplatApplyType: 0
+    useCustomControlTextures: 0
+    microSplatNormals: 0
+    microSplatTexArrConfig: {fileID: 0}
+    megaSplatTexList: {fileID: 0}
+    vegetationPackage: {fileID: 0}
+    assignComponent: 0
+    vegetationSystem: {fileID: 0}
+    vegetationSystemCopy: 1
+    sourceMultiPackageVsProTagName: 
+  guiSettings: 0
+  guiTileSettings: 1
+  guiOutputsSettings: 1
+  guiExposedVariables: 1
+  guiTerrainSettings: 0
+  guiDraftSettings: 0
+  guiTreesGrassSettings: 0
+  instantGenerate: 1
+  saveIntermediate: 1
+  heightWeldMargins: 5
+  splatsWeldMargins: 2
+  guiHideWireframe: 0
+  guiThreads: 1
+  applyColliders: 1
+  setDirty: 0
+  shift: 0
+  shiftThreshold: 4000
+  shiftExcludeLayers: 0
+  serializedMultithreading: 1
+  serializedMaxThreads: 3
+  serializedAutoMaxThreads: 1
+  serializedMaxApplyTime: 3
+--- !u!4 &630110602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630110600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &631915688
 Material:
   serializedVersion: 8
@@ -466,75 +632,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 7.977, y: -468.927, z: 916.103}
---- !u!1 &935446881
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 935446884}
-  - component: {fileID: 935446883}
-  - component: {fileID: 935446882}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &935446882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935446881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6625c53a54562ad489d3995458b00d52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileSize: 10
-  generationRadius: 5
-  tilePrefab: {fileID: 0}
-  player: {fileID: 0}
---- !u!114 &935446883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935446881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5f209d20de210845adeb50a8fb7b92d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floorPrefabs: []
-  minFloors: 1
-  maxFloors: 5
-  floorHeight: 3
-  buildingOffsetFromEdge: 1
-  buildingCheckSize: 3
-  roadLayer:
-    m_Bits: 0
---- !u!4 &935446884
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935446881}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.348219, y: 17.361483, z: -5.0062246}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1820395366
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,11 +719,7 @@ MonoBehaviour:
   Closest4Centers: []
   Center4: []
   rndfirst: 0
-  gizmoColor:
-    r: 1
-    g: 0
-    b: 0
-    a: 1
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   gizmoRadius: 1
   tileSize: 0
   Centers: []
@@ -769,7 +862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c503e08679b9d8d408f0a3e55874ae93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graph: {fileID: 11400000, guid: 2bdab3e72fc580f47a64b0c02293f3c5, type: 2}
+  graph: {fileID: 11400000, guid: 9207beade2da95e4d955602f6a38f5d9, type: 2}
   guiOpenObjectSelector: 0
   guiTiles: 1
   tiles:
@@ -800,11 +893,11 @@ MonoBehaviour:
     x: 0
     z: 0
   previewAssigned: 0
-  tileResolution: 129
+  tileResolution: 33
   tileMargins: 16
   draftsInEditor: 1
   draftsInPlaymode: 1
-  draftResolution: 257
+  draftResolution: 33
   draftMargins: 2
   guiLocks: 0
   locks: []
@@ -844,7 +937,7 @@ MonoBehaviour:
     copyLayersTags: 1
     copyComponents: 0
   globals:
-    height: 2.97
+    height: 1.67
     heightInterpolation: 1
     heightSplit: 129
     heightMainApply: 2
@@ -1471,4 +1564,4 @@ SceneRoots:
   - {fileID: 848565067}
   - {fileID: 292216109}
   - {fileID: 1966483959}
-  - {fileID: 935446884}
+  - {fileID: 630110602}
