@@ -125,7 +125,7 @@ MonoBehaviour:
       - t: 11
         v: -7307915029125779427
       - t: 11
-        v: 31
+        v: 32
       - t: 255
         v: 17
       - t: 255
@@ -190,7 +190,7 @@ MonoBehaviour:
       fields: []
       values: []
       special: 
-      uniObj: {fileID: 11400000, guid: 29fb837ecf0be514091e0ef978f607e5, type: 2}
+      uniObj: {fileID: 11400000, guid: ad3ec155bbf118e4490fab9f2be9ad8f, type: 2}
     - refId: 7
       type: MapMagic.Nodes.Biomes.BiomeLayer, MapMagic, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
